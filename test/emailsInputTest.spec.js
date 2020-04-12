@@ -12,7 +12,7 @@ describe('EmailsInput', function () {
 
       expect(instantiateSecond).to.throw(Error)
     })
-  });
+  })
   describe('Methods', function () {
     it('addEmail() should add an email to its list', function () {
       var element = document.createElement('div')
@@ -23,26 +23,26 @@ describe('EmailsInput', function () {
       expect(emailsList).to.eql([theEmail])
     })
 
-    it("getEmails() should get emails from its list", function () {
+    it('getEmails() should get emails from its list', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
-      var emails = ["user@gmail.com", "user2@gmail.com", "user3@gmail.com"]
+      var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
       instance._emails = emails
-      var currentListOfEmails = instance.getEmails();
+      var currentListOfEmails = instance.getEmails()
       expect(currentListOfEmails).to.eql(emails)
       expect(currentListOfEmails).to.not.equal(emails)
     })
 
-    it("setEmails() should set emails to its list", function () {
+    it('setEmails() should set emails to its list', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
-      var emails = ["user@gmail.com", "user2@gmail.com", "user3@gmail.com"]
-      var currentListOfEmails = instance.setEmails(emails);
+      var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
+      var currentListOfEmails = instance.setEmails(emails)
       expect(instance._emails).to.eql(emails)
       expect(instance._emails).to.not.equal(emails)
     })
 
-    it("setEmails() should throw an error when given a non-array argument", function () {
+    it('setEmails() should throw an error when given a non-array argument', function () {
 
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
@@ -60,48 +60,48 @@ describe('EmailsInput', function () {
   })
 
   describe('Change Listener', function () {
-    it("setEmails() should trigger change event", function () {
+    it('setEmails() should trigger change event', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
 
-      var notifiedNewValue;
+      var notifiedNewValue
       var callback = function (newValue) {
-        notifiedNewValue = newValue;
+        notifiedNewValue = newValue
       }
 
       var spiedCallback = chai.spy(callback)
 
       instance.addChangeListener(spiedCallback)
-      var emailsList = ["user1@gmail.com", "user2@gmail.com"]
+      var emailsList = ['user1@gmail.com', 'user2@gmail.com']
       instance.setEmails(emailsList)
 
-      expect(spiedCallback).to.have.been.called();
+      expect(spiedCallback).to.have.been.called()
       expect(notifiedNewValue).to.be.eql(emailsList)
       expect(notifiedNewValue).to.not.be.equal(emailsList)
 
-    });
+    })
 
-    it("addEmail() should trigger change event", function () {
+    it('addEmail() should trigger change event', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
-      var initialState = ["user1@gmail.com", "user2@gmail.com"]
+      var initialState = ['user1@gmail.com', 'user2@gmail.com']
       instance.setEmails(initialState)
 
-      var notifiedNewValue;
+      var notifiedNewValue
       var callback = function (newValue) {
-        notifiedNewValue = newValue;
+        notifiedNewValue = newValue
       }
 
       var spiedCallback = chai.spy(callback)
 
       instance.addChangeListener(spiedCallback)
-      instance.addEmail("user3@gmail.com")
+      instance.addEmail('user3@gmail.com')
 
-      initialState.push("user3@gmail.com");
+      initialState.push('user3@gmail.com')
 
-      expect(spiedCallback).to.have.been.called();
+      expect(spiedCallback).to.have.been.called()
       expect(notifiedNewValue).to.be.eql(initialState)
       expect(notifiedNewValue).to.not.be.equal(initialState)
-    });
-  });
+    })
+  })
 })
