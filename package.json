@@ -7,14 +7,10 @@
   "license": "MIT",
   "scripts": {
     "style": "node-sass src/emails-input.scss dist/emails-input.css",
-    "compile": "npx babel src/emails-input.js --out-file dist/emails-input.js",
+    "compile": "npx terser src/emails-input.js -o dist/emails-input.js --compress -m",
     "build": "npm run style && npm run compile"
   },
   "dependencies": {
     "node-sass": "^4.13.1"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
   }
 }
