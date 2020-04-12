@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Demo for emails-input Component</title>
-    <link href="../dist/emails-input.css" type="text/css" rel="stylesheet" />
+    <link href="../dist/emails-input.css" type="text/css" rel="stylesheet"/>
     <style>
         input[type=button] {
             background-color: #4566f6;
@@ -13,6 +13,7 @@
             padding: 10px 20px;
             font-size: 14px;
         }
+
         .main-form {
             margin: 30px auto;
             box-shadow: 4px 4px 10px #aaa;
@@ -20,18 +21,81 @@
             width: 800px;
             border-radius: 10px;
         }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+        }
     </style>
-    <script src="dist/email-input.js"></script>
+    <script src="../dist/emails-input.js"></script>
 </head>
 <body>
 
 <form class="main-form">
-    <div class="host"></div>
-    <input type="button" value="Add email" />
-    <input type="button" value="Get emails count" />
+    <div class="emails-input-element"></div>
+    <input type="button" class="add-email-button" value="Add email"/>
+    <input type="button" class="get-count-button" value="Get emails count"/>
+</form>
+
+<p align="center">Here is another instance to show that you can use more than one instance independently of each
+    other.</p>
+
+<form class="main-form">
+    <div class="emails-input-element"></div>
+    <input type="button" class="add-email-button" value="Add email"/>
+    <input type="button" class="get-count-button" value="Get emails count"/>
+</form>
+
+<p align="center">Here is another one:</p>
+
+<form class="main-form">
+    <div class="emails-input-element"></div>
+    <input type="button" class="add-email-button" value="Add email"/>
+    <input type="button" class="get-count-button" value="Get emails count"/>
 </form>
 
 <script>
+  (function () {
+    var demoApp = {
+      _initializeButtonEvents: function (self) {
+        window.addEventListener('DOMContentLoaded', function () {
+          var forms = document.querySelectorAll('.main-form')
+          forms.forEach(function (form) {
+            var add_email = form.querySelector('.add-email-button')
+            var get_count = form.querySelector('.get-count-button')
+
+            var hostElement = form.querySelector('.emails-input-element')
+
+            var emailsInputInstance = new EmailsInput(hostElement)
+
+            add_email.addEventListener('click', self._addRandomEmail.bind(add_email, emailsInputInstance))
+            get_count.addEventListener('click', self._getCount.bind(get_count, emailsInputInstance))
+          })
+
+        })
+      },
+      init: function () {
+        var self = this
+        this._initializeButtonEvents(self)
+        var host = document.querySelector('#host')
+        this.emailsInput1 = new EmailsInput(host)
+      },
+      _addRandomEmail: function (instance) {
+        var time = (new Date()).getTime()
+        time = Math.ceil(time / 1000)
+        var handle = 'random' + time
+        var domain = 'gmail.com'
+        var email = handle + '@' + domain
+        instance.addEmail(email)
+      },
+      _getCount: function (instance) {
+        var emails = instance.getEmails()
+        alert('This instance has ' + emails.length + ' count.');
+      }
+    }
+    demoApp.init()
+  })()
 
 </script>
 
