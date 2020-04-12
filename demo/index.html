@@ -11,13 +11,15 @@
             border-radius: 5px;
             color: #ffffff;
             padding: 10px 20px;
+
             font-size: 14px;
         }
 
         .main-form {
-            margin: 30px auto;
+            margin: 0 auto;
             box-shadow: 4px 4px 10px #aaa;
             padding: 30px;
+            box-sizing: border-box;
             width: 800px;
             border-radius: 10px;
         }
@@ -26,6 +28,13 @@
             margin: 0;
             padding: 0;
             font-family: Arial;
+        }
+
+        @media only screen and (max-width: 800px) {
+            .main-form {
+                width: 90%;
+                margin: 0 auto;
+            }
         }
     </style>
     <script src="../dist/emails-input.js"></script>
