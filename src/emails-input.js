@@ -11,20 +11,20 @@ var EmailsInput = (function () {
       this.emails = [] //list of email addresses
       this._hostElement = hostElement;
 
+      var elementAttributeProperty = 'x-emails-input'
+      if (typeof hostElement[elementAttributeProperty] !== "undefined") {
+        throw Error("Attempting to instantiate another instance of emails input on a element with a emails input already instantiated.");
+      }
+
+      this._hostElement[elementAttributeProperty] = this;
+
       for (var iter = 0; iter < count; iter++) {
         this.emails.push(1);
       }
     }
 
     EmailsInput.prototype.setEmails = function (emailsList) {
-      if (!(emailsList instanceof Array)) {
-        var actualType = typeof emailsList
-        throw new Error('setEmails() should be given an array. ' + actualType + ' given.')
-      }
 
-      var cleanList = emailsList.filter(function (email) {
-        return Util.isValidEmail(email)
-      })
     }
 
     EmailsInput.prototype.getEmails = function () {
@@ -32,10 +32,7 @@ var EmailsInput = (function () {
     }
 
     EmailsInput.prototype.addEmail = function (email) {
-      console.log(this.hostElement , " adding email");
     }
-
-    __testPortal__.isValidEmail = isValidEmail;
 
     return EmailsInput
   }

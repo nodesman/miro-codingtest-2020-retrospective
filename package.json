@@ -11,6 +11,7 @@
     "build": "npm run style && npm run compile"
   },
   "dependencies": {
+    "chai": "^4.2.0",
     "node-sass": "^4.13.1"
   }
 }
