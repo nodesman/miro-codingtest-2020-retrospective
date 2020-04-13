@@ -71,7 +71,8 @@
       _initializeButtonEvents: function (self) {
         window.addEventListener('DOMContentLoaded', function () {
           var forms = document.querySelectorAll('.main-form')
-          forms.forEach(function (form) {
+          for (var iter = 0; iter < forms.length; iter++) {
+            var form = forms[iter]
             var add_email = form.querySelector('.add-email-button')
             var get_count = form.querySelector('.get-count-button')
 
@@ -83,8 +84,7 @@
 
             add_email.addEventListener('click', self._addRandomEmail.bind(add_email, emailsInputInstance))
             get_count.addEventListener('click', self._getCount.bind(get_count, emailsInputInstance))
-          })
-
+          }
         })
       },
       init: function () {
