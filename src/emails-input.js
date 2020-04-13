@@ -190,7 +190,9 @@ var EmailsInput = (function () {
     EmailsInput.prototype._notifyListeners = function () {
       var self = this
       this._changeListeners.forEach(function (listener) {
-        var emailsListCurrent = self._emails.slice()
+        var emailsListCurrent = self._emails.map(function (item) {
+          return item.email;
+        })
         listener(emailsListCurrent)
       })
     }
@@ -200,7 +202,7 @@ var EmailsInput = (function () {
         throw new Error('setEmails() given a non Array argument.')
       }
       for (var iter = 0; iter < emailsList.length; iter++) {
-
+        this.addEmail(emailsList[iter]);
       }
       this._notifyListeners()
     }
@@ -218,6 +220,7 @@ var EmailsInput = (function () {
 
     EmailsInput.prototype.getAllItems = function () {
       return this._emails.map(function (item) {
+        console.log(item);
         return item.email
       })
     }

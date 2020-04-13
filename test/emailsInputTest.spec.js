@@ -19,7 +19,7 @@ describe('EmailsInput', function () {
       var instance = new EmailsInput(element)
       var theEmail = 'myemail@mydomain.com'
       instance.addEmail(theEmail)
-      var emailsList = instance._emails
+      var emailsList = instance.getAllItems();
       expect(emailsList).to.eql([theEmail])
     })
 
@@ -27,7 +27,10 @@ describe('EmailsInput', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
       var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
-      instance._emails = emails
+      for (var iter = 0; iter < emails.length; iter++) {
+        instance.addEmail(emails[iter]);
+      }
+
       var currentListOfEmails = instance.getAllItems()
       expect(currentListOfEmails).to.eql(emails)
       expect(currentListOfEmails).to.not.equal(emails)
@@ -38,8 +41,9 @@ describe('EmailsInput', function () {
       var instance = new EmailsInput(element)
       var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
       var currentListOfEmails = instance.setEmails(emails)
-      expect(instance._emails).to.eql(emails)
-      expect(instance._emails).to.not.equal(emails)
+      var emailsInList = instance.getAllItems()
+      expect(emailsInList).to.eql(emails)
+      expect(emailsInList).to.not.equal(emails)
     })
 
     it('setEmails() should throw an error when given a non-array argument', function () {
