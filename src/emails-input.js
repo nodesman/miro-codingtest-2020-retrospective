@@ -193,7 +193,7 @@ var EmailsInput = (function () {
       this._componentRoot.append(this._placeholderElement);
     }
 
-    EmailsInput.prototype._notifyListeners = function () {
+    function _notifyListeners() {
       var self = this
       this._changeListeners.forEach(function (listener) {
         var emailsListCurrent = self._emails.map(function (item) {
@@ -210,7 +210,7 @@ var EmailsInput = (function () {
       for (var iter = 0; iter < emailsList.length; iter++) {
         this.addEmail(emailsList[iter]);
       }
-      this._notifyListeners()
+      _notifyListeners.call(this)
     }
 
     EmailsInput.prototype.getEmails = function () {
@@ -284,7 +284,7 @@ var EmailsInput = (function () {
       var _componentRoot = this._componentRoot
       var lastTextNode = getLastTextNode(_componentRoot)
       this._componentRoot.insertBefore(node, lastTextNode)
-      this._notifyListeners() //TODO: May be move it to a private method and make it not visible from the public interface
+      _notifyListeners.call(this)
     }
 
     EmailsInput.prototype.addChangeListener = function (listener) {
