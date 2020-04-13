@@ -119,7 +119,6 @@ var EmailsInput = (function () {
       _componentRoot.classList.remove("focus")
     }
 
-    //TODO: CHECK IF WE END UP NOT NEEDING TO SEND ANYTHING OTHER THAN CONTAINER IF SO CHANGE THE ARGS
     function bindEvents (elements) {
       var container = elements.container
       container.addEventListener('paste', onPaste.bind(this))
@@ -163,9 +162,6 @@ var EmailsInput = (function () {
       return invalidEmailItem
     }
 
-    function removeEmail () {
-
-    }
 
     function EmailsInput (hostElement, providedOptions) {
 
@@ -176,7 +172,6 @@ var EmailsInput = (function () {
       this._placeholderText = options.placeholder
       this._placeholderElement = document.createTextNode(this._placeholderText);
 
-      //TODO: rendering placeholder text
       this._changeListeners = []
 
       var elementAttributeProperty = 'x-emails-input'
