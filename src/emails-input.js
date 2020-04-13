@@ -187,7 +187,14 @@ var EmailsInput = (function () {
 
     function EmailsInput (hostElement, providedOptions) {
 
-      var options = Object.assign({}, defaultOptions, providedOptions)
+      // var options = Object.assign({}, defaultOptions, providedOptions)
+      var options;
+      if (typeof providedOptions !== "undefined") {
+        options.placeholder = providedOptions.placeholder;
+      } else {
+        options.placeholder = defaultOptions.placeholder;
+      }
+
       this.hostElement = hostElement
       this._emails = [] //list of email addresses
       this._hostElement = hostElement
