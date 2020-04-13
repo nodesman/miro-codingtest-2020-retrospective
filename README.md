@@ -12,6 +12,10 @@ A email input field without any dependencies. This input field supports:
 USAGE
 =====
 
+Checkout this repository and then build using the <a href="#build">instructions below</a>. 
+Include the files `emails-input.js` and `emails-input.css` from the `dist` directory in your web page where you want to 
+use the component.  
+
 In your page, create a host element:
 ```$html
 <div class="emails-list-container"></div>
@@ -99,4 +103,21 @@ The above will output:
 
 ```$xslt
 ['test@gmail.com', 'test2@gmail.com'] 
+
 ```
+
+<a name="build">Building</a>
+========
+
+To build the latest version run:
+
+```javascript
+$ yarn build
+```
+
+This will create the minified css and js file in `dist/`
+
+Tests
+=====
+
+To run the tests open the file `test/index.html`
