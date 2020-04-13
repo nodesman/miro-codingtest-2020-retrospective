@@ -75,8 +75,13 @@ var EmailsInput = (function () {
 
     function onPaste (event) {
       event.preventDefault()
-      var self = this
-      var pasteContent = event.clipboardData.getData('text')
+      var self = this,
+          pasteContent;
+      if (!!window.clipboardData) {
+        pasteContent = window.clipboardData.getData("text");
+      } else {
+        pasteContent = event.clipboardData.getData('text')
+      }
       var emails = pasteContent.split(',')
       emails.forEach(function (email) {
         self.addEmail(email)
@@ -84,9 +89,15 @@ var EmailsInput = (function () {
     }
 
     function deleteItem (node) {
-      var correspondingItem = this._emails.find(function (item) {
-        return item.node === node
-      })
+
+      var correspondingItem;
+      for (var iter = 0; iter < this._emails.length; iter++) {
+        var current = this._emails[iter];
+        if (current.node === node) {
+          correspondingItem = current
+        }
+      }
+
       var index = this._emails.indexOf(correspondingItem)
 
       this._emails.splice(index, 1)
@@ -131,7 +142,9 @@ var EmailsInput = (function () {
     }
 
     function onGainFocus(event) {
-      this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+      if (this._placeholderElement.parentNode !== null) {
+        this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+      }
       event.target.classList.add("focus")
     }
 
@@ -263,6 +276,8 @@ var EmailsInput = (function () {
       if (email.trim().length === 0) {
         return
       }
+
+      email = email.trim();
 
       var item = {
         email: email,
