@@ -1,7 +1,7 @@
 Emails Input
 ===========
 
-<img src="./demo/current.png">
+<img src="public/current.png">
 
 A email input field without any dependencies. This input field supports:
 
