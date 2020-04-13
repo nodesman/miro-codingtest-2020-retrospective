@@ -163,6 +163,28 @@ var EmailsInput = (function () {
     }
 
 
+    function _notifyListeners() {
+      var self = this
+      this._changeListeners.forEach(function (listener) {
+        var emailsListCurrent = self._emails.map(function (item) {
+          return item.email;
+        })
+        listener(emailsListCurrent)
+      })
+    }
+
+    function getLastTextNode (element) {
+      var lastTextNode
+      for (var iter = element.childNodes.length - 1; iter >= 0; iter--) {
+        var currentNode = element.childNodes[iter]
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+          lastTextNode = currentNode
+          break
+        }
+      }
+      return lastTextNode
+    }
+
     function EmailsInput (hostElement, providedOptions) {
 
       var options = Object.assign({}, defaultOptions, providedOptions)
@@ -193,20 +215,17 @@ var EmailsInput = (function () {
       this._componentRoot.append(this._placeholderElement);
     }
 
-    function _notifyListeners() {
-      var self = this
-      this._changeListeners.forEach(function (listener) {
-        var emailsListCurrent = self._emails.map(function (item) {
-          return item.email;
-        })
-        listener(emailsListCurrent)
-      })
-    }
-
     EmailsInput.prototype.setEmails = function (emailsList) {
       if (!(emailsList instanceof Array)) {
         throw new Error('setEmails() given a non Array argument.')
       }
+
+      this._emails.forEach(function(item) {
+        item.node.parentNode.removeChild(item.node);
+      })
+
+      deleteAllDirectTextNodes(this._componentRoot);
+
       for (var iter = 0; iter < emailsList.length; iter++) {
         this.addEmail(emailsList[iter]);
       }
@@ -223,36 +242,11 @@ var EmailsInput = (function () {
       })
     }
 
-
     EmailsInput.prototype.getAllItems = function () {
       return this._emails.map(function (item) {
         console.log(item);
         return item.email
       })
-    }
-
-    function getLastTextNode (element) {
-      var lastTextNode
-      for (var iter = element.childNodes.length - 1; iter >= 0; iter--) {
-        var currentNode = element.childNodes[iter]
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-          lastTextNode = currentNode
-          break
-        }
-      }
-      return lastTextNode
-    }
-
-    function getFirstTextNode (element) {
-      var _firstTextNode
-      for (var iter = 0; iter < element.childNodes.length; iter++) {
-        var currentNode = element.childNodes[iter]
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-          _firstTextNode = currentNode
-          break
-        }
-      }
-      return _firstTextNode
     }
 
     EmailsInput.prototype.addEmail = function (email) {
