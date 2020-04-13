@@ -22,7 +22,7 @@ var EmailsInput = (function () {
       var text = ''
 
       for (var iter = 0; iter < element.childNodes.length; iter++) {
-        var childNode = element.childNodes[iter];
+        var childNode = element.childNodes[iter]
         if (childNode.nodeType === Node.TEXT_NODE) {
           text += childNode.textContent
         }
@@ -33,7 +33,7 @@ var EmailsInput = (function () {
 
     function deleteAllDirectTextNodes (element) {
       for (var iter = 0; iter < element.childNodes.length; iter++) {
-        var childNode = element.childNodes[iter];
+        var childNode = element.childNodes[iter]
         if (childNode.nodeType === Node.TEXT_NODE) {
           childNode.parentNode.removeChild(childNode)
         }
@@ -55,7 +55,7 @@ var EmailsInput = (function () {
       if (event.keyCode === RETURN_KEYCODE || event.keyCode === COMMA_KEYCODE) {
         event.preventDefault()
         _addTextContentAsAnItem.call(this, event.target)
-        return;
+        return
       }
 
       if (event.keyCode === BACKSPACE) {
@@ -76,9 +76,9 @@ var EmailsInput = (function () {
     function onPaste (event) {
       event.preventDefault()
       var self = this,
-          pasteContent;
+        pasteContent
       if (!!window.clipboardData) {
-        pasteContent = window.clipboardData.getData("text");
+        pasteContent = window.clipboardData.getData('text')
       } else {
         pasteContent = event.clipboardData.getData('text')
       }
@@ -90,9 +90,9 @@ var EmailsInput = (function () {
 
     function deleteItem (node) {
 
-      var correspondingItem;
+      var correspondingItem
       for (var iter = 0; iter < this._emails.length; iter++) {
-        var current = this._emails[iter];
+        var current = this._emails[iter]
         if (current.node === node) {
           correspondingItem = current
         }
@@ -127,9 +127,9 @@ var EmailsInput = (function () {
     function onLoseFocus (event) {
       var _componentRoot = event.target
       _addTextContentAsAnItem.call(this, _componentRoot)
-      this._placeholderElement = document.createTextNode(this._placeholderText);
-      _componentRoot.appendChild(this._placeholderElement);
-      _componentRoot.classList.remove("focus")
+      this._placeholderElement = document.createTextNode(this._placeholderText)
+      _componentRoot.appendChild(this._placeholderElement)
+      _componentRoot.classList.remove('focus')
     }
 
     function bindEvents (elements) {
@@ -141,11 +141,11 @@ var EmailsInput = (function () {
       container.addEventListener('click', onClick.bind(this))
     }
 
-    function onGainFocus(event) {
+    function onGainFocus (event) {
       if (this._placeholderElement.parentNode !== null) {
-        this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+        this._placeholderElement.parentNode.removeChild(this._placeholderElement)
       }
-      event.target.classList.add("focus")
+      event.target.classList.add('focus')
     }
 
     function createValidEmailNode (email) {
@@ -178,11 +178,11 @@ var EmailsInput = (function () {
     }
 
 
-    function _notifyListeners() {
+    function _notifyListeners () {
       var self = this
       this._changeListeners.forEach(function (listener) {
         var emailsListCurrent = self._emails.map(function (item) {
-          return item.email;
+          return item.email
         })
         listener(emailsListCurrent)
       })
@@ -203,18 +203,18 @@ var EmailsInput = (function () {
     function EmailsInput (hostElement, providedOptions) {
 
       // var options = Object.assign({}, defaultOptions, providedOptions)
-      var options = {};
-      if (typeof providedOptions !== "undefined") {
-        options.placeholder = providedOptions.placeholder;
+      var options = {}
+      if (typeof providedOptions !== 'undefined') {
+        options.placeholder = providedOptions.placeholder
       } else {
-        options.placeholder = defaultOptions.placeholder;
+        options.placeholder = defaultOptions.placeholder
       }
 
       this.hostElement = hostElement
       this._emails = [] //list of email addresses
       this._hostElement = hostElement
       this._placeholderText = options.placeholder
-      this._placeholderElement = document.createTextNode(this._placeholderText);
+      this._placeholderElement = document.createTextNode(this._placeholderText)
 
 
       this._changeListeners = []
@@ -234,7 +234,7 @@ var EmailsInput = (function () {
       bindEvents.call(this, {
         container: container
       })
-      this._componentRoot.appendChild(this._placeholderElement);
+      this._componentRoot.appendChild(this._placeholderElement)
     }
 
     EmailsInput.prototype.setEmails = function (emailsList) {
@@ -242,14 +242,14 @@ var EmailsInput = (function () {
         throw new Error('setEmails() given a non Array argument.')
       }
 
-      this._emails.forEach(function(item) {
-        item.node.parentNode.removeChild(item.node);
+      this._emails.forEach(function (item) {
+        item.node.parentNode.removeChild(item.node)
       })
 
-      deleteAllDirectTextNodes(this._componentRoot);
+      deleteAllDirectTextNodes(this._componentRoot)
 
       for (var iter = 0; iter < emailsList.length; iter++) {
-        this.addEmail(emailsList[iter]);
+        this.addEmail(emailsList[iter])
       }
       _notifyListeners.call(this)
     }
@@ -266,7 +266,7 @@ var EmailsInput = (function () {
 
     EmailsInput.prototype.getAllItems = function () {
       return this._emails.map(function (item) {
-        console.log(item);
+        console.log(item)
         return item.email
       })
     }
@@ -277,7 +277,7 @@ var EmailsInput = (function () {
         return
       }
 
-      email = email.trim();
+      email = email.trim()
 
       var item = {
         email: email,
