@@ -42,15 +42,33 @@ var EmailsInput = (function () {
       var content = getDirectTextContent(containerElement)
       this.addEmail(content)
       deleteAllDirectTextNodes(containerElement)
+      var textNode = document.createTextNode('')
+      containerElement.append(textNode)
     }
 
     function onKeyDown (event) {
       var RETURN_KEYCODE = 'Enter'
       var COMMA_KEYCODE = 'Comma'
+      var BACKSPACE = 'Backspace'
       if (event.code === RETURN_KEYCODE || event.code === COMMA_KEYCODE) {
         event.preventDefault()
         _addTextContentAsAnItem.call(this, event.target)
+        return;
       }
+
+      if (event.code === BACKSPACE) {
+        var currentSelection = getSelection()
+        var lastTextNode = getLastTextNode(event.target)
+        if (currentSelection.focusNode !== lastTextNode) {
+          event.preventDefault()
+          return
+        }
+
+        if (currentSelection.anchorOffset === 0) {
+          event.preventDefault()
+        }
+      }
+
     }
 
     function onPaste (event) {
@@ -63,22 +81,34 @@ var EmailsInput = (function () {
       })
     }
 
-    function deleteItem(node) {
-      var correspondingItem = this._emails.find(function(item) {
-        return item.node === node;
+    function deleteItem (node) {
+      var correspondingItem = this._emails.find(function (item) {
+        return item.node === node
       })
-      var index = this._emails.indexOf(correspondingItem);
+      var index = this._emails.indexOf(correspondingItem)
 
       this._emails.splice(index, 1)
-      node.parentNode.removeChild(node);
+      node.parentNode.removeChild(node)
     }
 
-    function onClick(event) {
+    function onClick (event) {
 
-      if (event.target.classList.contains("delete-item")) {
-        deleteItem.call(this, event.target.parentNode);
+      if (event.target.classList.contains('delete-item')) {
+        deleteItem.call(this, event.target.parentNode)
+        return
       }
-
+      var componentRoot = event.currentTarget
+      var range = document.createRange()
+      var sel = window.getSelection()
+      var lastText = getLastTextNode(componentRoot)
+      if (typeof lastText === 'undefined') {
+        return
+      }
+      range.setStart(lastText, 0)
+      range.collapse(true)
+      sel.removeAllRanges()
+      sel.addRange(range)
+      event.preventDefault()
     }
 
     function onLoseFocus (event) {
@@ -157,9 +187,6 @@ var EmailsInput = (function () {
       })
     }
 
-    EmailsInput.prototype.getEmails = function () {
-
-    }
     EmailsInput.prototype._notifyListeners = function () {
       var self = this
       this._changeListeners.forEach(function (listener) {
@@ -195,6 +222,30 @@ var EmailsInput = (function () {
       })
     }
 
+    function getLastTextNode (element) {
+      var lastTextNode
+      for (var iter = element.childNodes.length - 1; iter >= 0; iter--) {
+        var currentNode = element.childNodes[iter]
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+          lastTextNode = currentNode
+          break
+        }
+      }
+      return lastTextNode
+    }
+
+    function getFirstTextNode (element) {
+      var _firstTextNode
+      for (var iter = 0; iter < element.childNodes.length; iter++) {
+        var currentNode = element.childNodes[iter]
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+          _firstTextNode = currentNode
+          break
+        }
+      }
+      return _firstTextNode
+    }
+
     EmailsInput.prototype.addEmail = function (email) {
 
       if (email.trim().length === 0) {
@@ -222,15 +273,8 @@ var EmailsInput = (function () {
 
       //add the new email address before the current node where the cursor is
       var _componentRoot = this._componentRoot
-      var _firstTextNode
-      for (var iter = 0; iter < _componentRoot.childNodes.length; iter++) {
-        var currentNode = _componentRoot.childNodes[iter]
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-          _firstTextNode = currentNode
-          break
-        }
-      }
-      this._componentRoot.insertBefore(node, _firstTextNode)
+      var lastTextNode = getLastTextNode(_componentRoot)
+      this._componentRoot.insertBefore(node, lastTextNode)
       this._notifyListeners() //TODO: May be move it to a private method and make it not visible from the public interface
     }
 
