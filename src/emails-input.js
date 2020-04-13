@@ -21,21 +21,23 @@ var EmailsInput = (function () {
     function getDirectTextContent (element) {
       var text = ''
 
-      element.childNodes.forEach(function (childNode) {
+      for (var iter = 0; iter < element.childNodes.length; iter++) {
+        var childNode = element.childNodes[iter];
         if (childNode.nodeType === Node.TEXT_NODE) {
           text += childNode.textContent
         }
-      })
+      }
       return text
     }
 
 
     function deleteAllDirectTextNodes (element) {
-      element.childNodes.forEach(function (childNode) {
+      for (var iter = 0; iter < element.childNodes.length; iter++) {
+        var childNode = element.childNodes[iter];
         if (childNode.nodeType === Node.TEXT_NODE) {
-          childNode.parentElement.removeChild(childNode)
+          childNode.parentNode.removeChild(childNode)
         }
-      })
+      }
     }
 
     function _addTextContentAsAnItem (containerElement) {
@@ -43,20 +45,20 @@ var EmailsInput = (function () {
       this.addEmail(content)
       deleteAllDirectTextNodes(containerElement)
       var textNode = document.createTextNode('')
-      containerElement.append(textNode)
+      containerElement.appendChild(textNode)
     }
 
     function onKeyDown (event) {
-      var RETURN_KEYCODE = 'Enter'
-      var COMMA_KEYCODE = 'Comma'
-      var BACKSPACE = 'Backspace'
-      if (event.code === RETURN_KEYCODE || event.code === COMMA_KEYCODE) {
+      var RETURN_KEYCODE = 13
+      var COMMA_KEYCODE = 188
+      var BACKSPACE = 8
+      if (event.keyCode === RETURN_KEYCODE || event.keyCode === COMMA_KEYCODE) {
         event.preventDefault()
         _addTextContentAsAnItem.call(this, event.target)
         return;
       }
 
-      if (event.code === BACKSPACE) {
+      if (event.keyCode === BACKSPACE) {
         var currentSelection = getSelection()
         var lastTextNode = getLastTextNode(event.target)
         if (currentSelection.focusNode !== lastTextNode) {
@@ -144,7 +146,7 @@ var EmailsInput = (function () {
         'class': 'delete-item'
       })
       deleteElement.innerText = 'x'
-      emailAddressElement.append(deleteElement)
+      emailAddressElement.appendChild(deleteElement)
       return emailAddressElement
     }
 
@@ -158,7 +160,7 @@ var EmailsInput = (function () {
         'class': 'delete-item'
       })
       deleteElement.innerText = 'x'
-      invalidEmailItem.append(deleteElement)
+      invalidEmailItem.appendChild(deleteElement)
       return invalidEmailItem
     }
 
@@ -188,7 +190,7 @@ var EmailsInput = (function () {
     function EmailsInput (hostElement, providedOptions) {
 
       // var options = Object.assign({}, defaultOptions, providedOptions)
-      var options;
+      var options = {};
       if (typeof providedOptions !== "undefined") {
         options.placeholder = providedOptions.placeholder;
       } else {
@@ -201,25 +203,25 @@ var EmailsInput = (function () {
       this._placeholderText = options.placeholder
       this._placeholderElement = document.createTextNode(this._placeholderText);
 
-      this._changeListeners = []
 
+      this._changeListeners = []
       var elementAttributeProperty = 'x-emails-input'
       if (typeof hostElement[elementAttributeProperty] !== 'undefined') {
         throw Error('Attempting to instantiate another instance of emails input on a element with a emails input already instantiated.')
-      }
 
+      }
       this._hostElement[elementAttributeProperty] = this
       var container = createElement('div', {
         'class': 'emails-input',
         'contentEditable': 'true'
       })
       this._hostElement.appendChild(container)
-      this._componentRoot = container
 
+      this._componentRoot = container
       bindEvents.call(this, {
         container: container
       })
-      this._componentRoot.append(this._placeholderElement);
+      this._componentRoot.appendChild(this._placeholderElement);
     }
 
     EmailsInput.prototype.setEmails = function (emailsList) {
