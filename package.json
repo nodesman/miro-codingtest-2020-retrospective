@@ -6,8 +6,8 @@
   "author": "Raj <rajs@nodesman.com>",
   "license": "MIT",
   "scripts": {
-    "style": "node-sass src/emails-input.scss dist/emails-input.css",
-    "stylePages": "node-sass src/emails-input.scss public/emails-input.css",
+    "style": "npx node-sass src/emails-input.scss dist/emails-input.css",
+    "stylePages": "npx node-sass src/emails-input.scss public/emails-input.css",
     "compile": "npx terser src/emails-input.js -o dist/emails-input.js --compress -m",
     "compilePages": "npx terser src/emails-input.js -o public/emails-input.js --compress -m",
     "build": "npm run style && npm run compile",
