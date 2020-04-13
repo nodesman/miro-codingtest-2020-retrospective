@@ -7,8 +7,11 @@
   "license": "MIT",
   "scripts": {
     "style": "node-sass src/emails-input.scss dist/emails-input.css",
+    "stylePages": "node-sass src/emails-input.scss public/emails-input.css",
     "compile": "npx terser src/emails-input.js -o dist/emails-input.js --compress -m",
-    "build": "npm run style && npm run compile"
+    "compilePages": "npx terser src/emails-input.js -o public/emails-input.js --compress -m",
+    "build": "npm run style && npm run compile",
+    "pages": "npm run stylePages && npm run compilePages"
   },
   "dependencies": {
     "chai": "^4.2.0",
