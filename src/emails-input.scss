@@ -14,24 +14,36 @@
   }
 
   .email-input-valid-email {
-    background-color: #ccc;
+    background-color: rgba(102, 153, 255, 0.2);
+    font-family: Open Sans;
     padding: 1px 5px 5px 11px;
     display: inline-block;
     white-space: nowrap;
     margin-top: 2px;
-    font-size: 10px;
+    font-size: 14px;
     border-radius: 20px;
   }
 
+  .email-input-invalid-email {
+    background-color: transparent;
+    font-family: Open Sans;
+    border-bottom: 1px dashed #f00;
+    padding: 1px 5px 5px 11px;
+    .delete-item {
+      margin-left: 7px;
+    }
+  }
+
   .email-input-invalid-email +.email-input-valid-email, .email-input-invalid-email + .email-input-invalid-email {
-    margin-left: 3px;
+    margin-left: 7px;
   }
 
   .delete-item {
     margin-left: 10px;
     margin-right: 3px;
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: lighter;
     cursor: pointer;
     &:hover {
       color: #9f9f9f;
@@ -42,14 +54,7 @@
     margin-left: 3px;
   }
 
-  .email-input-invalid-email {
-    background-color: transparent;
-    border-bottom: 1px dashed #f00;
-    padding: 1px 5px 5px 11px;
-    .delete-item {
-      margin-left: 7px;
-    }
-  }
+
 
   .email-input-invalid-email:last-child, .email-input-valid-email:last-child {
     margin-right: 5px;
