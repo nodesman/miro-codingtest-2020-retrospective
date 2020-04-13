@@ -112,7 +112,11 @@ var EmailsInput = (function () {
     }
 
     function onLoseFocus (event) {
-      _addTextContentAsAnItem.call(this, event.target)
+      var _componentRoot = event.target
+      _addTextContentAsAnItem.call(this, _componentRoot)
+      this._placeholderElement = document.createTextNode(this._placeholderText);
+      _componentRoot.appendChild(this._placeholderElement);
+      _componentRoot.classList.remove("focus")
     }
 
     //TODO: CHECK IF WE END UP NOT NEEDING TO SEND ANYTHING OTHER THAN CONTAINER IF SO CHANGE THE ARGS
@@ -121,8 +125,13 @@ var EmailsInput = (function () {
       container.addEventListener('paste', onPaste.bind(this))
       container.addEventListener('keydown', onKeyDown.bind(this))
       container.addEventListener('focusout', onLoseFocus.bind(this))
+      container.addEventListener('focusin', onGainFocus.bind(this))
       container.addEventListener('click', onClick.bind(this))
+    }
 
+    function onGainFocus(event) {
+      this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+      event.target.classList.add("focus")
     }
 
     function createValidEmailNode (email) {
@@ -165,6 +174,7 @@ var EmailsInput = (function () {
       this._emails = [] //list of email addresses
       this._hostElement = hostElement
       this._placeholderText = options.placeholder
+      this._placeholderElement = document.createTextNode(this._placeholderText);
 
       //TODO: rendering placeholder text
       this._changeListeners = []
@@ -185,6 +195,7 @@ var EmailsInput = (function () {
       bindEvents.call(this, {
         container: container
       })
+      this._componentRoot.append(this._placeholderElement);
     }
 
     EmailsInput.prototype._notifyListeners = function () {

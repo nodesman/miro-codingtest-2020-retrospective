@@ -77,7 +77,9 @@
 
             var hostElement = form.querySelector('.emails-input-element')
 
-            var emailsInputInstance = new EmailsInput(hostElement)
+            var emailsInputInstance = new EmailsInput(hostElement, {
+              placeholder: "Add more teammates ..."
+            })
 
             add_email.addEventListener('click', self._addRandomEmail.bind(add_email, emailsInputInstance))
             get_count.addEventListener('click', self._getCount.bind(get_count, emailsInputInstance))
