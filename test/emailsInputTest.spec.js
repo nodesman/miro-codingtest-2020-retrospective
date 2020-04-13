@@ -23,12 +23,12 @@ describe('EmailsInput', function () {
       expect(emailsList).to.eql([theEmail])
     })
 
-    it('getEmails() should get emails from its list', function () {
+    it('getAllItems() should get emails from its list', function () {
       var element = document.createElement('div')
       var instance = new EmailsInput(element)
       var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
       instance._emails = emails
-      var currentListOfEmails = instance.getEmails()
+      var currentListOfEmails = instance.getAllItems()
       expect(currentListOfEmails).to.eql(emails)
       expect(currentListOfEmails).to.not.equal(emails)
     })

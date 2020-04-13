@@ -12,4 +12,46 @@
   &:focus {
     outline: none;
   }
+
+  .email-input-valid-email {
+    background-color: #ccc;
+    padding: 1px 5px 5px 11px;
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 2px;
+    font-size: 10px;
+    border-radius: 20px;
+  }
+
+  .email-input-invalid-email +.email-input-valid-email, .email-input-invalid-email + .email-input-invalid-email {
+    margin-left: 3px;
+  }
+
+  .delete-item {
+    margin-left: 10px;
+    margin-right: 3px;
+    display: inline-block;
+    font-size: 13px;
+    cursor: pointer;
+    &:hover {
+      color: #9f9f9f;
+    }
+  }
+
+  .email-input-valid-email +.email-input-valid-email, .email-input-valid-email + .email-input-invalid-email {
+    margin-left: 3px;
+  }
+
+  .email-input-invalid-email {
+    background-color: transparent;
+    border-bottom: 1px dashed #f00;
+    padding: 1px 5px 5px 11px;
+    .delete-item {
+      margin-left: 7px;
+    }
+  }
+
+  .email-input-invalid-email:last-child, .email-input-valid-email:last-child {
+    margin-right: 5px;
+  }
 }
