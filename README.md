@@ -5,6 +5,8 @@ Emails Input — Zero-Dependency Vanilla JS Component (Miro 2020 Assessment)
 > - **Full Retrospective & Code Review**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/](https://nodesman.github.io/miro-codingtest-2020-retrospective/)**
 > - **Standalone Multi-Instance Live Demo**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/public/](https://nodesman.github.io/miro-codingtest-2020-retrospective/public/)**
 > - **Live Browser Mocha + Chai + Spies Test Suite**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/test/](https://nodesman.github.io/miro-codingtest-2020-retrospective/test/)**
+>
+> *Note: While I passed this coding round at Miro, the role ultimately did not pan out for other reasons.*
 
 ---
 
