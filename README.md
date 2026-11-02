@@ -1,5 +1,12 @@
-Emails Input
-===========
+Emails Input — Zero-Dependency Vanilla JS Component (Miro 2020 Assessment)
+==========================================================================
+
+> **Live GitHub Pages Retrospective, Interactive Demo & In-Browser Mocha Test Suite**:
+> - **Full Retrospective & Code Review**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/](https://nodesman.github.io/miro-codingtest-2020-retrospective/)**
+> - **Standalone Multi-Instance Live Demo**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/public/](https://nodesman.github.io/miro-codingtest-2020-retrospective/public/)**
+> - **Live Browser Mocha + Chai + Spies Test Suite**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/test/](https://nodesman.github.io/miro-codingtest-2020-retrospective/test/)**
+
+---
 
 <img src="public/current.png">
 
