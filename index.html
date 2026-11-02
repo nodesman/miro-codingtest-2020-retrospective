@@ -678,7 +678,71 @@ var emails = pasteContent.split(',');</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">06 // RETROSPECTIVE CODE AUDIT NOTES</span>
+                    <span class="num">06 // CURSOR-PRESERVING INSERTION</span>
+                    <h3>Inserting Pills Before the Active Cursor Text Node</h3>
+                    <p>
+                        Calling <code>appendChild(node)</code> would place new email pills <em>after</em> the text node where the user is typing, trapping the caret to the left of the new pill. Finding <code>lastTextNode</code> and calling <code>insertBefore(node, lastTextNode)</code> keeps the active typing cursor anchored at the far right, just like Gmail&rsquo;s <code>To:</code> field.
+                    </p>
+                    <pre class="code-snippet">var _componentRoot = this._componentRoot;
+var lastTextNode = getLastTextNode(_componentRoot);
+this._componentRoot.insertBefore(node, lastTextNode);</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">07 // VISUAL TYPOGRAPHY COMBINATORS</span>
+                    <h3>Asymmetric Sibling Spacing (<code>7px</code> vs. <code>3px</code>)</h3>
+                    <p>
+                        Valid emails sit inside a visible pill background (<code>rgba(102, 153, 255, 0.2)</code>) and only need a <code>3px</code> gap. Invalid emails have a transparent background with a <code>1px dashed #f00</code> bottom border—so items following an invalid email receive a wider <code>7px</code> margin to prevent adjacent red dashed underlines from visually merging.
+                    </p>
+                    <pre class="code-snippet">.email-input-invalid-email + .email-input-invalid-email {
+  margin-left: 7px;
+}
+.email-input-valid-email + .email-input-valid-email {
+  margin-left: 3px;
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">08 // NON-DESTRUCTIVE VALIDATION</span>
+                    <h3>Dual Retrieval API: <code>getEmails()</code> vs. <code>getAllItems()</code></h3>
+                    <p>
+                        Rather than silently discarding malformed emails when a user pastes a messy CSV batch, invalid tokens are rendered inline with a dashed red underline so the user can inspect and delete them, while the SDK separates <code>getEmails()</code> (strictly valid addresses) from <code>getAllItems()</code> (all tokens).
+                    </p>
+                    <pre class="code-snippet">EmailsInput.prototype.getEmails = function () {
+  return this._emails
+    .filter(function (item) { return item.isValid === true; })
+    .map(function (item) { return item.email; });
+};</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">09 // PLACEHOLDER TEXT_NODE LIFECYCLE</span>
+                    <h3>Dynamic Placeholder on <code>contentEditable</code></h3>
+                    <p>
+                        Because <code>contentEditable="true"</code> <code>&lt;div&gt;</code> elements do not support the native HTML <code>placeholder</code> attribute—and the spec required the placeholder to appear at the end of existing pills when unfocused—<code>this._placeholderElement</code> is managed as a live <code>Node.TEXT_NODE</code> attached on <code>focusout</code> and removed on <code>focusin</code>.
+                    </p>
+                    <pre class="code-snippet">function onGainFocus (event) {
+  if (this._placeholderElement.parentNode !== null) {
+    this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+  }
+  event.target.classList.add('focus');
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">10 // PARTIAL FUNCTION APPLICATION</span>
+                    <h3>Avoiding ES5 Loop Closure Bugs via <code>.bind()</code></h3>
+                    <p>
+                        In <code>public/index.html</code>, wiring button handlers across multiple form instances inside an ES5 <code>for (var iter...)</code> loop used <code>.bind(add_email, emailsInputInstance)</code> to partially apply each instance by value—avoiding the classic ES5 shared loop-variable closure bug.
+                    </p>
+                    <pre class="code-snippet">add_email.addEventListener(
+  'click',
+  self._addRandomEmail.bind(add_email, emailsInputInstance)
+);</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">11 // RETROSPECTIVE CODE AUDIT NOTES</span>
                     <h3>Three Edge Cases Identified in 2026 Review</h3>
                     <p>
                         Reviewing the 2020 code with fresh eyes highlights three subtle edge cases: (1) <code>setEmails()</code> removes DOM nodes but should also reset <code>this._emails = []</code> before re-adding; (2) <code>deleteAllDirectTextNodes</code> iterates forward over a live <code>childNodes</code> list rather than backward; and (3) clicking <code>.delete-item</code> should invoke <code>_notifyListeners.call(this)</code>.
