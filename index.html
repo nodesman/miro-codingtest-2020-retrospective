@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miro Frontend Assessment (April 2020) — Zero-Dependency EmailsInput Component | Raj Sekharan</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --surface-elevated: #eef1f4;
+            --border: #d0d7de;
+            --border-subtle: #e5e8ec;
+            --text: #1f2328;
+            --text-muted: #4d5561;
+            --text-dim: #656d76;
+            --accent: #0969da;
+            --accent-soft: #ddf4ff;
+            --emerald: #1a7f37;
+            --emerald-soft: #dafbe1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-size: 14px;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header.topbar {
+            border-bottom: 1px solid var(--border);
+            background: #f6f8fa;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 52px;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+        }
+
+        .brand {
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            padding: 40px 0 32px;
+            border-bottom: 1px solid var(--border);
+            background: #ffffff;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            padding: 4px 10px;
+            border-radius: 3px;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        .hero h1 {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 1.35;
+            color: var(--text);
+            max-width: 900px;
+            margin-bottom: 14px;
+        }
+
+        .hero-lead {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 860px;
+            margin-bottom: 24px;
+        }
+
+        .meta-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .meta-label {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 700;
+        }
+
+        .meta-value {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .meta-value.pass {
+            color: var(--emerald);
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+            border: 1px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #0550ae;
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-elevated);
+        }
+
+        section {
+            padding: 36px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-tag {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .section-title {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text);
+        }
+
+        .personal-note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 4px;
+            padding: 24px 28px;
+        }
+
+        .personal-note p {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .personal-note p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .personal-note strong {
+            color: #000000;
+            font-weight: 700;
+        }
+
+        .signature {
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .demo-instructions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .step-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 14px 16px;
+        }
+
+        .step-num {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .step-card h4 {
+            font-size: 13.5px;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .step-card p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+
+        .browser-window {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            background: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .browser-chrome {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: var(--surface-elevated);
+            border-bottom: 1px solid var(--border);
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #bbb;
+            border: 1px solid #999;
+        }
+
+        .demo-iframe {
+            width: 100%;
+            height: 460px;
+            border: none;
+            background: #fff;
+            display: block;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .review-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .review-card .num {
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .review-card h3 {
+            font-size: 15px;
+            line-height: 1.35;
+            color: var(--text);
+        }
+
+        .review-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .code-snippet {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 10px 12px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text);
+            overflow-x: auto;
+            margin-top: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: var(--surface);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            padding: 8px 14px;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .tab-btn.active {
+            background: #ffffff;
+            color: var(--accent);
+            border-color: var(--border);
+            font-weight: 700;
+        }
+
+        .source-panel {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            padding: 16px;
+            overflow-x: auto;
+            max-height: 640px;
+            overflow-y: auto;
+        }
+
+        .source-panel.active {
+            display: block;
+        }
+
+        .source-panel pre {
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: var(--text);
+        }
+
+        code {
+            font-family: Consolas, 'Courier New', monospace;
+            background: var(--surface-elevated);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 92%;
+        }
+
+        .source-panel pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        footer {
+            padding: 28px 0;
+            text-align: center;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            color: var(--text-dim);
+            background: var(--surface);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <a href="#" class="brand">
+                <span class="brand-dot"></span>
+                <span>RAJ SEKHARAN // MIRO 2020 ZERO-DEPENDENCY COMPONENT ARCHIVE</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#live-demo">Live Demo &amp; Tests</a>
+                <a href="#code-review">Code Review</a>
+                <a href="#source-code">Source Code</a>
+                <a href="https://github.com/nodesman/miro-codingtest-2020-retrospective" target="_blank">GitHub Repo &nearr;</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="eyebrow">ARCHIVE &bull; APRIL 11–14, 2020 &bull; AMSTERDAM</div>
+            <h1>Miro Frontend Coding Assessment: Zero-Dependency <code>EmailsInput</code> SDK</h1>
+            <p class="hero-lead">
+                Built in April 2020 in Amsterdam: a reusable, zero-dependency vanilla JavaScript UI component library (<code>EmailsInput</code>) for entering, pasting, validating, and subscribing to lists of email addresses—complete with IE11 + modern browser compatibility and a Mocha + Chai + Spies unit test suite.
+            </p>
+
+            <div class="meta-strip">
+                <div class="meta-item">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-value">April 11–14, 2020 (23 Commits)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Runtime Dependencies</span>
+                    <span class="meta-value pass">Zero (Pure Vanilla ES5 + SCSS)</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Browser Support</span>
+                    <span class="meta-value">IE11, Chrome, Firefox, Safari</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Verification</span>
+                    <span class="meta-value pass">&#10003; Mocha + Chai + Spies Test Suite</span>
+                </div>
+            </div>
+
+            <div class="cta-row">
+                <a href="#live-demo" class="btn btn-primary">Try the Live Component &amp; Mocha Tests &darr;</a>
+                <a href="#code-review" class="btn btn-secondary">Read the Architectural Review</a>
+                <a href="#source-code" class="btn btn-secondary">Inspect Source Code (315 LOC)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 1. Overview & Context -->
+    <section id="overview">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">01 // Engineering Context</span>
+                <h2 class="section-title">Designing a Reusable UI SDK Without Framework Dependencies</h2>
+            </div>
+
+            <div class="personal-note">
+                <p>
+                    The goal of this April 2020 assessment for Miro was to engineer a standalone, drop-in JavaScript component (<code>EmailsInput</code>) that any web application could mount onto arbitrary DOM nodes with zero runtime dependencies, while supporting multiple independent instances on the same page.
+                </p>
+                <p>
+                    Rather than relying on a framework or wrapping a standard HTML <code>&lt;input&gt;</code> tag, I architected <code>EmailsInput</code> around a single <code>contentEditable="true"</code> container housing non-editable pill elements (<code>contentEditable="false"</code>) alongside direct <code>Node.TEXT_NODE</code> nodes, managing cursor placement through the native W3C <code>Range</code> and <code>Selection</code> APIs.
+                </p>
+                <p>
+                    Looking back at this repository alongside my <a href="https://nodesman.github.io/flipkart-codingtest-2013-retrospective/" style="color: var(--accent);">2013 Flipkart spreadsheet assessment</a> shows the evolution from raw DOM scripting in 2013 to clean prototype-based SDK design, defensive immutability, and automated Mocha/Chai unit testing in 2020.
+                </p>
+
+                <div class="signature">
+                    <span>&mdash; Raj Sekharan (Raj Aramudan)</span>
+                    <span>Original commits: April 11–14, 2020 &bull; Archived: November 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Live Interactive Demo & Mocha Test Suite -->
+    <section id="live-demo">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">02 // Live Interactive Component &amp; Unit Test Runner</span>
+                <h2 class="section-title">Interactive Multi-Instance Demo &amp; In-Browser Mocha Suite</h2>
+            </div>
+
+            <div class="demo-instructions">
+                <div class="step-card">
+                    <span class="step-num">FEATURE 01 // TYPE OR PASTE CSV</span>
+                    <h4>Type an Email + Comma / Enter</h4>
+                    <p>Click inside any input box below, type an email address (valid like <code>alex@miro.com</code> or invalid like <code>invalid-email</code>) and press <code>,</code>, <code>Enter</code>, or click outside.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">FEATURE 02 // PROGRAMMATIC API</span>
+                    <h4>Add Random Email &amp; Count</h4>
+                    <p>Click <strong>Add email</strong> or <strong>Get emails count</strong> on any of the three independent form instances to test <code>instance.addEmail()</code> and <code>instance.getEmails()</code>.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-num">FEATURE 03 // LIVE MOCHA SUITE</span>
+                    <h4>In-Browser Unit Tests</h4>
+                    <p>Scroll to the second window below to see the live <code>test/index.html</code> Mocha + Chai + Chai-Spies test runner executing against <code>src/emails-input.js</code>.</p>
+                </div>
+            </div>
+
+            <div class="browser-window">
+                <div class="browser-chrome">
+                    <div class="window-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span>public/index.html &mdash; Live Multi-Instance EmailsInput Demo</span>
+                    <a href="public/index.html" target="_blank" style="color: var(--accent); text-decoration: none;">Open Fullscreen &nearr;</a>
+                </div>
+                <iframe class="demo-iframe" src="public/index.html" title="Miro 2020 EmailsInput Live Demo"></iframe>
+            </div>
+
+            <div class="browser-window" style="margin-bottom: 0;">
+                <div class="browser-chrome">
+                    <div class="window-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span>test/index.html &mdash; Live Mocha + Chai + Spies Unit Test Runner</span>
+                    <a href="test/index.html" target="_blank" style="color: var(--accent); text-decoration: none;">Open Fullscreen &nearr;</a>
+                </div>
+                <iframe class="demo-iframe" style="height: 360px;" src="test/index.html" title="Miro 2020 Mocha Unit Tests"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Architectural Code Review -->
+    <section id="code-review">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">03 // Architectural &amp; Code Review</span>
+                <h2 class="section-title">Key Engineering Decisions in <code>src/emails-input.js</code></h2>
+            </div>
+
+            <div class="review-grid">
+                <div class="review-card">
+                    <span class="num">01 // ENCAPSULATION PATTERN</span>
+                    <h3>IIFE Closure + Prototype Public API</h3>
+                    <p>
+                        All internal helpers (<code>_addTextContentAsAnItem</code>, <code>_notifyListeners</code>, <code>bindEvents</code>, <code>deleteItem</code>) remain strictly private inside the outer IIFE closure and are invoked via <code>.call(this)</code> and <code>.bind(this)</code>, exposing only the 5 public methods on <code>EmailsInput.prototype</code>.
+                    </p>
+                    <pre class="code-snippet">function bindEvents (elements) {
+  var container = elements.container;
+  container.addEventListener('paste', onPaste.bind(this));
+  container.addEventListener('keydown', onKeyDown.bind(this));
+  container.addEventListener('focusout', onLoseFocus.bind(this));
+  container.addEventListener('focusin', onGainFocus.bind(this));
+  container.addEventListener('click', onClick.bind(this));
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">02 // LOW-LEVEL DOM SELECTION</span>
+                    <h3>W3C <code>Range</code>, <code>Selection</code> &amp; <code>TEXT_NODE</code> Control</h3>
+                    <p>
+                        Using a <code>contentEditable="true"</code> root containing <code>contentEditable="false"</code> chip spans required explicit caret management via <code>document.createRange()</code> and <code>window.getSelection()</code>, plus guarding Backspace on <code>focusNode</code> and <code>anchorOffset</code>.
+                    </p>
+                    <pre class="code-snippet">var range = document.createRange();
+var sel = window.getSelection();
+var lastText = getLastTextNode(componentRoot);
+range.setStart(lastText, 0);
+range.collapse(true);
+sel.removeAllRanges();
+sel.addRange(range);</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">03 // DEFENSIVE SDK GUARDS</span>
+                    <h3>Duplicate-Mount Prevention &amp; Input Validation</h3>
+                    <p>
+                        The constructor stamps <code>hostElement['x-emails-input'] = this</code> and throws if a consumer attempts to mount a second instance on the same element. Likewise, <code>setEmails()</code> validates <code>emailsList instanceof Array</code> before mutating state.
+                    </p>
+                    <pre class="code-snippet">var elementAttributeProperty = 'x-emails-input';
+if (typeof hostElement[elementAttributeProperty] !== 'undefined') {
+  throw Error('Attempting to instantiate another instance...');
+}
+this._hostElement[elementAttributeProperty] = this;</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">04 // STATE IMMUTABILITY</span>
+                    <h3>Defensive Array Copies Verified by Unit Tests</h3>
+                    <p>
+                        <code>getEmails()</code>, <code>getAllItems()</code>, and <code>_notifyListeners()</code> always return fresh array projections via <code>.map()</code> so callers cannot mutate internal state—explicitly verified with <code>expect(currentListOfEmails).to.not.equal(emails)</code> in Mocha.
+                    </p>
+                    <pre class="code-snippet">EmailsInput.prototype.getAllItems = function () {
+  return this._emails.map(function (item) {
+    return item.email;
+  });
+};</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">05 // CROSS-BROWSER CLIPBOARD</span>
+                    <h3>IE11 &amp; Modern CSV Paste Handling</h3>
+                    <p>
+                        Supporting IE11 alongside modern browsers required branching between <code>window.clipboardData.getData('text')</code> (IE11) and <code>event.clipboardData.getData('text')</code> (W3C), splitting comma-separated batches automatically.
+                    </p>
+                    <pre class="code-snippet">if (!!window.clipboardData) {
+  pasteContent = window.clipboardData.getData('text');
+} else {
+  pasteContent = event.clipboardData.getData('text');
+}
+var emails = pasteContent.split(',');</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">06 // RETROSPECTIVE CODE AUDIT NOTES</span>
+                    <h3>Three Edge Cases Identified in 2026 Review</h3>
+                    <p>
+                        Reviewing the 2020 code with fresh eyes highlights three subtle edge cases: (1) <code>setEmails()</code> removes DOM nodes but should also reset <code>this._emails = []</code> before re-adding; (2) <code>deleteAllDirectTextNodes</code> iterates forward over a live <code>childNodes</code> list rather than backward; and (3) clicking <code>.delete-item</code> should invoke <code>_notifyListeners.call(this)</code>.
+                    </p>
+                    <pre class="code-snippet">// In getLastTextNode (line 193), backward iteration was used:
+for (var iter = element.childNodes.length - 1; iter &gt;= 0; iter--) {
+  ...
+}</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Complete Source Code Viewer -->
+    <section id="source-code">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">04 // Verbatim 2020 Source Files</span>
+                <h2 class="section-title">Inspect <code>src/emails-input.js</code> &amp; <code>test/emailsInputTest.spec.js</code></h2>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('js', this)">src/emails-input.js (315 lines)</button>
+                <button class="tab-btn" onclick="showTab('test', this)">test/emailsInputTest.spec.js (111 lines)</button>
+                <button class="tab-btn" onclick="showTab('scss', this)">src/emails-input.scss (70 lines)</button>
+            </div>
+
+            <div id="tab-js" class="source-panel active">
+<pre><code>var EmailsInput = (function () {
+
+    var emailValidationRegex = /^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    function isValidEmail (possibleEmail) {
+      return emailValidationRegex.test(possibleEmail);
+    }
+
+    function createElement (tagName, attributes) {
+      var element = document.createElement(tagName);
+      for (var attribute in attributes) {
+        element.setAttribute(attribute, attributes[attribute]);
+      }
+      return element;
+    }
+
+    var defaultOptions = {
+      placeholder: 'add more people...'
+    };
+
+    function getDirectTextContent (element) {
+      var text = '';
+
+      for (var iter = 0; iter &lt; element.childNodes.length; iter++) {
+        var childNode = element.childNodes[iter];
+        if (childNode.nodeType === Node.TEXT_NODE) {
+          text += childNode.textContent;
+        }
+      }
+      return text;
+    }
+
+
+    function deleteAllDirectTextNodes (element) {
+      for (var iter = 0; iter &lt; element.childNodes.length; iter++) {
+        var childNode = element.childNodes[iter];
+        if (childNode.nodeType === Node.TEXT_NODE) {
+          childNode.parentNode.removeChild(childNode);
+        }
+      }
+    }
+
+    function _addTextContentAsAnItem (containerElement) {
+      var content = getDirectTextContent(containerElement);
+      this.addEmail(content);
+      deleteAllDirectTextNodes(containerElement);
+      var textNode = document.createTextNode('');
+      containerElement.appendChild(textNode);
+    }
+
+    function onKeyDown (event) {
+      var RETURN_KEYCODE = 13;
+      var COMMA_KEYCODE = 188;
+      var BACKSPACE = 8;
+      if (event.keyCode === RETURN_KEYCODE || event.keyCode === COMMA_KEYCODE) {
+        event.preventDefault();
+        _addTextContentAsAnItem.call(this, event.target);
+        return;
+      }
+
+      if (event.keyCode === BACKSPACE) {
+        var currentSelection = getSelection();
+        var lastTextNode = getLastTextNode(event.target);
+        if (currentSelection.focusNode !== lastTextNode) {
+          event.preventDefault();
+          return;
+        }
+
+        if (currentSelection.anchorOffset === 0) {
+          event.preventDefault();
+        }
+      }
+
+    }
+
+    function onPaste (event) {
+      event.preventDefault();
+      var self = this,
+        pasteContent;
+      if (!!window.clipboardData) {
+        pasteContent = window.clipboardData.getData('text');
+      } else {
+        pasteContent = event.clipboardData.getData('text');
+      }
+      var emails = pasteContent.split(',');
+      emails.forEach(function (email) {
+        self.addEmail(email);
+      });
+    }
+
+    function deleteItem (node) {
+
+      var correspondingItem;
+      for (var iter = 0; iter &lt; this._emails.length; iter++) {
+        var current = this._emails[iter];
+        if (current.node === node) {
+          correspondingItem = current;
+        }
+      }
+
+      var index = this._emails.indexOf(correspondingItem);
+
+      this._emails.splice(index, 1);
+      node.parentNode.removeChild(node);
+    }
+
+    function onClick (event) {
+
+      if (event.target.classList.contains('delete-item')) {
+        deleteItem.call(this, event.target.parentNode);
+        return;
+      }
+      var componentRoot = event.currentTarget;
+      var range = document.createRange();
+      var sel = window.getSelection();
+      var lastText = getLastTextNode(componentRoot);
+      if (typeof lastText === 'undefined') {
+        return;
+      }
+      range.setStart(lastText, 0);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      event.preventDefault();
+    }
+
+    function onLoseFocus (event) {
+      var _componentRoot = event.target;
+      _addTextContentAsAnItem.call(this, _componentRoot);
+      this._placeholderElement = document.createTextNode(this._placeholderText);
+      _componentRoot.appendChild(this._placeholderElement);
+      _componentRoot.classList.remove('focus');
+    }
+
+    function bindEvents (elements) {
+      var container = elements.container;
+      container.addEventListener('paste', onPaste.bind(this));
+      container.addEventListener('keydown', onKeyDown.bind(this));
+      container.addEventListener('focusout', onLoseFocus.bind(this));
+      container.addEventListener('focusin', onGainFocus.bind(this));
+      container.addEventListener('click', onClick.bind(this));
+    }
+
+    function onGainFocus (event) {
+      if (this._placeholderElement.parentNode !== null) {
+        this._placeholderElement.parentNode.removeChild(this._placeholderElement);
+      }
+      event.target.classList.add('focus');
+    }
+
+    function createValidEmailNode (email) {
+      var emailAddressElement = createElement('span', {
+        'class': 'email-input-valid-email',
+        'contentEditable': 'false'
+      });
+      emailAddressElement.innerText = email;
+
+      var deleteElement = createElement('span', {
+        'class': 'delete-item'
+      });
+      deleteElement.innerText = 'x';
+      emailAddressElement.appendChild(deleteElement);
+      return emailAddressElement;
+    }
+
+    function createInvalidEmailNode (content) {
+      var invalidEmailItem = createElement('span', {
+        'class': 'email-input-invalid-email',
+        'contentEditable': 'false'
+      });
+      invalidEmailItem.innerText = content;
+      var deleteElement = createElement('span', {
+        'class': 'delete-item'
+      });
+      deleteElement.innerText = 'x';
+      invalidEmailItem.appendChild(deleteElement);
+      return invalidEmailItem;
+    }
+
+
+    function _notifyListeners () {
+      var self = this;
+      this._changeListeners.forEach(function (listener) {
+        var emailsListCurrent = self._emails.map(function (item) {
+          return item.email;
+        });
+        listener(emailsListCurrent);
+      });
+    }
+
+    function getLastTextNode (element) {
+      var lastTextNode;
+      for (var iter = element.childNodes.length - 1; iter &gt;= 0; iter--) {
+        var currentNode = element.childNodes[iter];
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+          lastTextNode = currentNode;
+          break;
+        }
+      }
+      return lastTextNode;
+    }
+
+    function EmailsInput (hostElement, providedOptions) {
+
+      // var options = Object.assign({}, defaultOptions, providedOptions)
+      var options = {};
+      if (typeof providedOptions !== 'undefined') {
+        options.placeholder = providedOptions.placeholder;
+      } else {
+        options.placeholder = defaultOptions.placeholder;
+      }
+
+      this.hostElement = hostElement;
+      this._emails = []; //list of email addresses
+      this._hostElement = hostElement;
+      this._placeholderText = options.placeholder;
+      this._placeholderElement = document.createTextNode(this._placeholderText);
+
+
+      this._changeListeners = [];
+      var elementAttributeProperty = 'x-emails-input';
+      if (typeof hostElement[elementAttributeProperty] !== 'undefined') {
+        throw Error('Attempting to instantiate another instance of emails input on a element with a emails input already instantiated.');
+
+      }
+      this._hostElement[elementAttributeProperty] = this;
+      var container = createElement('div', {
+        'class': 'emails-input',
+        'contentEditable': 'true'
+      });
+      this._hostElement.appendChild(container);
+
+      this._componentRoot = container;
+      bindEvents.call(this, {
+        container: container
+      });
+      this._componentRoot.appendChild(this._placeholderElement);
+    }
+
+    EmailsInput.prototype.setEmails = function (emailsList) {
+      if (!(emailsList instanceof Array)) {
+        throw new Error('setEmails() given a non Array argument.');
+      }
+
+      this._emails.forEach(function (item) {
+        item.node.parentNode.removeChild(item.node);
+      });
+
+      deleteAllDirectTextNodes(this._componentRoot);
+
+      for (var iter = 0; iter &lt; emailsList.length; iter++) {
+        this.addEmail(emailsList[iter]);
+      }
+      _notifyListeners.call(this);
+    };
+
+    EmailsInput.prototype.getEmails = function () {
+      var validItems = this._emails.filter(function (item) {
+        return item.isValid === true;
+      });
+
+      return validItems.map(function (item) {
+        return item.email;
+      });
+    };
+
+    EmailsInput.prototype.getAllItems = function () {
+      return this._emails.map(function (item) {
+        return item.email;
+      });
+    };
+
+    EmailsInput.prototype.addEmail = function (email) {
+
+      if (email.trim().length === 0) {
+        return;
+      }
+
+      email = email.trim();
+
+      var item = {
+        email: email,
+        node: null,
+        isValid: false
+      };
+      var node = null;
+      if (isValidEmail(email)) {
+        node = createValidEmailNode(email);
+        item.email = email;
+        item.node = node;
+        item.isValid = true;
+      } else {
+        node = createInvalidEmailNode(email);
+        item.email = email;
+        item.node = node;
+        item.isValid = false;
+      }
+      this._emails.push(item);
+
+      //add the new email address before the current node where the cursor is
+      var _componentRoot = this._componentRoot;
+      var lastTextNode = getLastTextNode(_componentRoot);
+      this._componentRoot.insertBefore(node, lastTextNode);
+      _notifyListeners.call(this);
+    };
+
+    EmailsInput.prototype.addChangeListener = function (listener) {
+      if (this._changeListeners.indexOf(listener) === -1) {
+        this._changeListeners.push(listener);
+      }
+    };
+
+    return EmailsInput;
+  }
+)();</code></pre>
+            </div>
+
+            <div id="tab-test" class="source-panel">
+<pre><code>var expect = chai.expect
+describe('EmailsInput', function () {
+  describe('Instantiation', function () {
+    it('should not allow more than one instance on the same element', function () {
+
+      var element = document.createElement('div')
+      var firstInstance = new EmailsInput(element)
+
+      function instantiateSecond () {
+        var secondInstance = new EmailsInput(element)
+      }
+
+      expect(instantiateSecond).to.throw(Error)
+    })
+  })
+  describe('Methods', function () {
+    it('addEmail() should add an email to its list', function () {
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+      var theEmail = 'myemail@mydomain.com'
+      instance.addEmail(theEmail)
+      var emailsList = instance.getAllItems();
+      expect(emailsList).to.eql([theEmail])
+    })
+
+    it('getAllItems() should get emails from its list', function () {
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+      var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
+      for (var iter = 0; iter &lt; emails.length; iter++) {
+        instance.addEmail(emails[iter]);
+      }
+
+      var currentListOfEmails = instance.getAllItems()
+      expect(currentListOfEmails).to.eql(emails)
+      expect(currentListOfEmails).to.not.equal(emails)
+    })
+
+    it('setEmails() should set emails to its list', function () {
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+      var emails = ['user@gmail.com', 'user2@gmail.com', 'user3@gmail.com']
+      var currentListOfEmails = instance.setEmails(emails)
+      var emailsInList = instance.getAllItems()
+      expect(emailsInList).to.eql(emails)
+      expect(emailsInList).to.not.equal(emails)
+    })
+
+    it('setEmails() should throw an error when given a non-array argument', function () {
+
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+
+      expect(function () {
+        instance.setEmails(null)
+      }).to.throw(Error)
+      expect(function () {
+        instance.setEmails('user@gmail.com')
+      }).to.throw(Error)
+      expect(function () {
+        instance.setEmails({0: 'user@gmail.com'})
+      }).to.throw(Error)
+    })
+  })
+
+  describe('Change Listener', function () {
+    it('setEmails() should trigger change event', function () {
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+
+      var notifiedNewValue
+      var callback = function (newValue) {
+        notifiedNewValue = newValue
+      }
+
+      var spiedCallback = chai.spy(callback)
+
+      instance.addChangeListener(spiedCallback)
+      var emailsList = ['user1@gmail.com', 'user2@gmail.com']
+      instance.setEmails(emailsList)
+
+      expect(spiedCallback).to.have.been.called()
+      expect(notifiedNewValue).to.be.eql(emailsList)
+      expect(notifiedNewValue).to.not.be.equal(emailsList)
+
+    })
+
+    it('addEmail() should trigger change event', function () {
+      var element = document.createElement('div')
+      var instance = new EmailsInput(element)
+      var initialState = ['user1@gmail.com', 'user2@gmail.com']
+      instance.setEmails(initialState)
+
+      var notifiedNewValue
+      var callback = function (newValue) {
+        notifiedNewValue = newValue
+      }
+
+      var spiedCallback = chai.spy(callback)
+
+      instance.addChangeListener(spiedCallback)
+      instance.addEmail('user3@gmail.com')
+
+      initialState.push('user3@gmail.com')
+
+      expect(spiedCallback).to.have.been.called()
+      expect(notifiedNewValue).to.be.eql(initialState)
+      expect(notifiedNewValue).to.not.be.equal(initialState)
+    })
+  })
+})</code></pre>
+            </div>
+
+            <div id="tab-scss" class="source-panel">
+<pre><code>.emails-input {
+  margin: 10px 0;
+  padding: 10px;
+  box-shadow: 0 0 2px #aaa;
+  min-width: 400px;
+  border-radius: 3px;
+  font-size: 13px;
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: #fff;
+  color: #C3C2CF;
+  min-height: 50px;
+
+  &amp;.focus {
+    color: #000;
+  }
+
+  &amp;:focus {
+    outline: none;
+  }
+
+  .email-input-valid-email {
+    background-color: rgba(102, 153, 255, 0.2);
+    font-family: Open Sans;
+    padding: 1px 5px 5px 11px;
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 2px;
+    color: #050038;
+    font-size: 14px;
+    border-radius: 20px;
+  }
+
+  .email-input-invalid-email {
+    background-color: transparent;
+    font-family: Open Sans;
+    border-bottom: 1px dashed #f00;
+    padding: 1px 5px 5px 11px;
+    color: #050038;
+    .delete-item {
+      margin-left: 7px;
+    }
+  }
+
+  .email-input-invalid-email +.email-input-valid-email, .email-input-invalid-email + .email-input-invalid-email {
+    margin-left: 7px;
+  }
+
+  .delete-item {
+    margin-left: 10px;
+    margin-right: 3px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: lighter;
+    cursor: pointer;
+    &amp;:hover {
+      color: #9f9f9f;
+    }
+  }
+
+  .email-input-valid-email +.email-input-valid-email, .email-input-valid-email + .email-input-invalid-email {
+    margin-left: 3px;
+  }
+
+  .email-input-invalid-email:last-child, .email-input-valid-email:last-child {
+    margin-right: 5px;
+  }
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Archived &amp; Published by <strong>Raj Sekharan (Raj Aramudan)</strong> &bull; <a href="https://aramudan.dev" target="_blank">aramudan.dev</a> &bull; Original commits: <code>April 11–14, 2020</code></p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(id, btn) {
+            var panels = document.querySelectorAll('.source-panel');
+            for (var i = 0; i < panels.length; i++) {
+                panels[i].classList.remove('active');
+            }
+            var buttons = document.querySelectorAll('.tab-btn');
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].classList.remove('active');
+            }
+            document.getElementById('tab-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
