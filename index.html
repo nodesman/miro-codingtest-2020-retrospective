@@ -111,8 +111,8 @@
 
         /* Hero / Lead Story Header */
         .hero {
-            padding: 44px 0 40px;
-            border-bottom: 1px solid var(--border);
+            padding: 44px 0 0;
+            border-bottom: none;
             background: #ffffff;
         }
 
@@ -737,16 +737,14 @@
 
             <div class="cta-row">
                 <a href="#live-demo" class="btn btn-primary">Try the Live Demo &darr;</a>
-                <a href="#code-review" class="btn btn-secondary">Read Technical Deep Dive &darr;</a>
             </div>
         </div>
     </section>
 
     <!-- 1. Overview & Context -->
-    <section id="overview">
+    <section id="overview" style="padding-top: 28px;">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part I &mdash; The Brief</span>
                 <h2 class="section-title">Miro asked for a reusable email-input widget&mdash;&#8203;like their own &ldquo;Share board&rdquo; dialog</h2>
             </div>
 
@@ -786,7 +784,7 @@
     <section id="live-demo">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part II &mdash; Live Demo &amp; Automated Tests</span>
+                <span class="section-tag">Live Demo &amp; Automated Tests</span>
                 <h2 class="section-title">Try the Multi-Instance Component &amp; In-Browser Mocha Suite</h2>
             </div>
 
@@ -836,7 +834,7 @@
     <section id="code-review">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part III &mdash; Technical Deep Dive</span>
+                <span class="section-tag">Technical Deep Dive</span>
                 <h2 class="section-title">Under the Hood: Browser DOM Internals &amp; SDK Architecture</h2>
             </div>
 
@@ -1101,7 +1099,7 @@ this._hostElement[elementAttributeProperty] = this;</pre>
     <section id="source-code">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part IV &mdash; Verbatim 2020 Source Files</span>
+                <span class="section-tag">Verbatim 2020 Source Files</span>
                 <h2 class="section-title">Inspect <code>src/emails-input.js</code> &amp; <code>test/emailsInputTest.spec.js</code></h2>
             </div>
 
