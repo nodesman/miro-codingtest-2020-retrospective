@@ -649,7 +649,7 @@
             <div class="eyebrow">Engineering Retrospective &middot; April 11–14, 2020 &middot; Amsterdam</div>
             <h1>Miro Frontend Coding Assessment: Zero-Dependency <code>EmailsInput</code> SDK &amp; Browser DOM Internals</h1>
             <p class="hero-lead">
-                Rather than wrapping an HTML <code>&lt;input&gt;</code> tag inside a framework, this 315-line pure ES5 component builds a composite editing surface directly atop the browser&rsquo;s <code>contentEditable</code> engine—orchestrating non-editable pill islands, bare <code>Node.TEXT_NODE</code> leaves, W3C <code>Selection</code> and <code>Range</code> caret geometry, CSS anonymous text-box inheritance, and cross-engine event delegation from IE11 (<code>Trident</code>) to modern <code>Blink</code>, <code>Gecko</code>, and <code>WebKit</code>.
+                Built in 315 lines of zero-dependency ES5, this component implements a multi-email chip editor as a composite editing surface directly atop the browser&rsquo;s <code>contentEditable</code> engine—orchestrating non-editable pill islands, bare <code>Node.TEXT_NODE</code> leaves, W3C <code>Selection</code> and <code>Range</code> caret geometry, CSS anonymous text-box inheritance, and cross-engine event delegation from IE11 (<code>Trident</code>) to modern <code>Blink</code>, <code>Gecko</code>, and <code>WebKit</code>.
             </p>
 
             <div class="meta-strip">
@@ -684,19 +684,19 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Part I &mdash; Architectural Thesis</span>
-                <h2 class="section-title">Why Choosing a Composite <code>contentEditable</code> Surface Required Deep Browser-Engine Mastery</h2>
+                <h2 class="section-title">Building a Composite <code>contentEditable</code> Surface Directly on Browser DOM Primitives</h2>
             </div>
 
             <div class="thesis-layout">
                 <div class="personal-note">
                     <p>
-                        When asked to build a multi-email chip input without frameworks, most implementations take the safe shortcut: rendering a Flexbox list of <code>&lt;span&gt;</code> tags followed by a standard HTML <code>&lt;input type="text"&gt;</code> at the tail. That shortcut avoids browser editing internals, at the cost of rigid input box widths, awkward line-wrapping behavior, split focus borders, and unnatural multi-token clipboard paste handling.
+                        For this April 2020 Miro frontend assessment, I built <code>EmailsInput</code> as a standalone, zero-dependency JavaScript SDK (315 lines of pure ES5 and 70 lines of SCSS) that mounts onto any host element, runs multiple isolated instances on the same page, and supports IE11 (<code>Trident</code>) alongside modern Chrome, Firefox, and Safari.
                     </p>
                     <p>
-                        For this April 2020 Miro SDK, I deliberately took the harder, native-feeling DOM path: making the <strong>entire <code>.emails-input</code> container a single <code>contentEditable="true"</code> editing surface</strong> populated with non-editable pill islands (<code>contentEditable="false"</code>) alongside bare <code>Node.TEXT_NODE</code> leaves.
+                        I modeled the entire <code>.emails-input</code> container as a <strong>single <code>contentEditable="true"</code> editing surface</strong> populated with non-editable pill islands (<code>contentEditable="false"</code>) and bare <code>Node.TEXT_NODE</code> leaves. Having one continuous flow container gives the user natural inline pill wrapping, unified focus borders, and seamless multi-address clipboard pasting.
                     </p>
                     <p>
-                        Building directly on mixed editable and non-editable DOM subtrees forces you to take full responsibility for low-level browser mechanics that frameworks normally abstract away: blocking the browser&rsquo;s native rich-text editing engine from silently ripping <code>contentEditable="false"</code> islands out of the DOM on <code>Backspace</code>, keeping a live trailing <code>CharacterData</code> anchor so collapsed W3C <code>Range</code> carets never vanish, reading typed characters from <code>nodeType === 3</code> leaves without scraping text from existing pills, and styling classless anonymous CSS text boxes through parent cascade inheritance.
+                        Making a mixed editable and non-editable DOM subtree behave deterministically meant managing the browser&rsquo;s editing, selection, and rendering internals directly in vanilla JavaScript: intercepting <code>Backspace</code> in the rich-text editing engine so pills are never removed behind internal state, seeding a persistent trailing <code>CharacterData</code> node so collapsed W3C <code>Range</code> carets always have a valid anchor, reading typed input strictly from direct <code>nodeType === 3</code> leaves, and styling classless anonymous CSS text boxes via parent color inheritance.
                     </p>
                     <p>
                         I passed this coding assessment round at Miro on the strength of the zero-dependency SDK architecture, cross-browser DOM and Selection handling, and in-browser unit test suite, though the role ultimately did not pan out for other reasons.
@@ -832,9 +832,9 @@ sel.addRange(range);</pre>
 
                 <div class="review-card">
                     <span class="num">03 &middot; DOM Tree Traversal</span>
-                    <h3>Walking Direct <code>Node.TEXT_NODE</code> Leaves vs. <code>textContent</code> Pollution</h3>
+                    <h3>Isolating Typed Keystrokes by Walking Direct <code>Node.TEXT_NODE</code> Leaves</h3>
                     <p>
-                        Reading <code>container.textContent</code> or <code>container.innerText</code> recursively concatenates every descendant element&rsquo;s text—meaning existing pills like <code>john@miro.com</code> and their child <code>x</code> delete buttons would be scraped right back into newly typed input (<code>"john@miro.comxnew@miro.com"</code>). Walking direct <code>childNodes</code> and filtering strictly on <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>) isolates only raw user keystrokes.
+                        In a mixed container holding both pill elements and bare text, <code>container.textContent</code> and <code>container.innerText</code> recursively concatenate every descendant&rsquo;s text—including existing emails and their child <code>x</code> delete buttons. <code>getDirectTextContent()</code> walks direct <code>childNodes</code> and filters strictly on <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>) so tokenization reads only raw user keystrokes.
                     </p>
                     <pre class="code-snippet">function getDirectTextContent (el) {
   var text = '';
@@ -852,7 +852,7 @@ sel.addRange(range);</pre>
                     <span class="num">04 &middot; Cursor-Preserving Mutation</span>
                     <h3>Pre-Caret Pill Insertion via <code>insertBefore(node, lastTextNode)</code></h3>
                     <p>
-                        Calling <code>appendChild(node)</code> when minting a pill places the new <code>&lt;span&gt;</code> <em>after</em> the active text node where the user is typing—trapping the blinking cursor to the left of the newly created pill. Scanning <code>childNodes</code> backward in <code>getLastTextNode()</code> and invoking <code>insertBefore(node, lastTextNode)</code> snaps every pill cleanly to the left while keeping the active caret anchored at the tail.
+                        Inside <code>insertItemNode</code>, <code>getLastTextNode()</code> scans <code>childNodes</code> backward from the end of the container to locate the active trailing text node and inserts each newly minted pill immediately ahead of it via <code>insertBefore(node, lastTextNode)</code>. Every new pill snaps cleanly to the left while the live typing caret remains anchored at the tail.
                     </p>
                     <pre class="code-snippet">function getLastTextNode (el) {
   for (var i = el.childNodes.length - 1; i &gt;= 0; i--) {
@@ -882,7 +882,7 @@ _componentRoot.insertBefore(node, lastText);</pre>
                     <span class="num">06 &middot; W3C UI Events Propagation</span>
                     <h3>Bubbling <code>focusin</code> / <code>focusout</code> &amp; Single-Listener Click Delegation</h3>
                     <p>
-                        Rather than binding non-bubbling <code>focus</code>/<code>blur</code> handlers or attaching per-pill click listeners, <code>bindEvents</code> registers bubbling <code>focusin</code>/<code>focusout</code> listeners and a single root <code>click</code> handler. Inside <code>onClick</code>, <code>event.target</code> catches <code>.delete-item</code> clicks while <code>event.currentTarget</code> handles container caret focus—giving <code>O(1)</code> listener memory with zero detached-DOM listener leaks across thousands of pasted pills.
+                        <code>bindEvents</code> attaches five listeners directly on the container root: bubbling <code>focusin</code> and <code>focusout</code> handlers for focus transitions, <code>paste</code> and <code>keydown</code> handlers, and a single delegated <code>click</code> handler. Inside <code>onClick</code>, <code>event.target</code> routes <code>.delete-item</code> clicks to pill removal while <code>event.currentTarget</code> collapses caret focus onto the trailing text node—keeping listener memory <code>O(1)</code> across any number of pasted pills.
                     </p>
                     <pre class="code-snippet">function onClick (event) {
   if (event.target.classList.contains('delete-item')) {
@@ -898,7 +898,7 @@ _componentRoot.insertBefore(node, lastText);</pre>
                     <span class="num">07 &middot; Cross-Engine Clipboard &amp; ES5 Runtime</span>
                     <h3>IE11 (<code>Trident</code>) vs. W3C Clipboard APIs &amp; Zero-Polyfill ES5</h3>
                     <p>
-                        Supporting IE11 alongside modern browsers without polyfills required handling two distinct runtime gaps: branching between IE&rsquo;s global <code>window.clipboardData.getData('text')</code> and W3C&rsquo;s <code>event.clipboardData.getData('text')</code> for comma-separated batch pastes, and replacing ES6 <code>Object.assign</code> in the constructor with explicit ES5 option resolution.
+                        Supporting IE11 alongside modern browsers without polyfills meant bridging two runtime surfaces directly: branching between IE&rsquo;s global <code>window.clipboardData.getData('text')</code> and W3C&rsquo;s <code>event.clipboardData.getData('text')</code> for comma-separated batch pastes, and writing explicit ES5 option resolution in the constructor.
                     </p>
                     <pre class="code-snippet">if (!!window.clipboardData) {
   pasteContent = window.clipboardData.getData('text');
@@ -912,7 +912,7 @@ var emails = pasteContent.split(',');</pre>
                     <span class="num">08 &middot; Parser-Boundary Security</span>
                     <h3>DOM XSS Immunity by Construction (Zero <code>innerHTML</code>)</h3>
                     <p>
-                        Because invalid tokens are rendered visibly inline so users can see and remove typos after pasting a CSV list, any implementation using template strings and <code>innerHTML</code> triggers immediate DOM XSS when pasted payloads contain <code>&lt;img src=x onerror=...&gt;</code>. Across all 315 lines, <code>innerHTML</code> is never invoked once—every node is built via <code>document.createElement</code>, <code>.innerText</code>, and <code>document.createTextNode</code>.
+                        Invalid tokens are rendered visibly inline so users can spot and remove typos after pasting a comma-separated list. Across all 315 lines, <code>innerHTML</code> is never invoked once—every valid pill, invalid token, delete control, and placeholder node is constructed strictly via <code>document.createElement</code>, <code>.innerText</code>, and <code>document.createTextNode</code>, neutralizing HTML or script payloads at the DOM API boundary.
                     </p>
                     <pre class="code-snippet">var invalidEmailItem = createElement('span', {
   'class': 'email-input-invalid-email',
@@ -948,7 +948,7 @@ invalidEmailItem.innerText = content;</pre>
                     <span class="num">10 &middot; DOM Object Identity</span>
                     <h3>Deleting Pills by Exact <code>HTMLElement</code> Reference</h3>
                     <p>
-                        <code>deleteItem(node)</code> locates the record in <code>this._emails</code> by comparing exact DOM element object identity (<code>current.node === node</code>) rather than matching email strings. This guarantees that if a user enters duplicate email addresses, clicking <code>x</code> removes the exact pill clicked—and avoids reading <code>node.innerText</code>, which carries the trailing <code>'x'</code> button label.
+                        Each entry in <code>this._emails</code> stores both the email string and a direct reference to its mounted DOM element. When a user clicks <code>x</code>, <code>deleteItem(node)</code> matches exact <code>HTMLElement</code> object identity (<code>current.node === node</code>), guaranteeing that duplicate email addresses remove the exact pill clicked without parsing text out of the DOM.
                     </p>
                     <pre class="code-snippet">for (var iter = 0; iter &lt; this._emails.length; iter++) {
   var current = this._emails[iter];
@@ -962,7 +962,7 @@ invalidEmailItem.innerText = content;</pre>
                     <span class="num">11 &middot; DOM Wrapper Expando Guard</span>
                     <h3>Duplicate-Mount Prevention Without Markup Pollution</h3>
                     <p>
-                        Rather than calling <code>setAttribute</code> (which serializes objects to <code>"[object Object]"</code> in the HTML DOM), the constructor attaches an expando reference <code>hostElement['x-emails-input'] = this</code> directly onto the JS <code>HTMLElement</code> wrapper and throws deterministically on duplicate instantiation. Likewise, <code>setEmails()</code> guards <code>emailsList instanceof Array</code> up front.
+                        During initialization, the constructor attaches an expando property <code>hostElement['x-emails-input'] = this</code> directly onto the JavaScript <code>HTMLElement</code> wrapper—keeping serialized HTML markup clean while throwing deterministically if a caller attempts to mount a second instance onto the same host node. Likewise, <code>setEmails()</code> validates <code>emailsList instanceof Array</code> up front.
                     </p>
                     <pre class="code-snippet">var elementAttributeProperty = 'x-emails-input';
 if (typeof hostElement[elementAttributeProperty] !== 'undefined') {
@@ -1000,9 +1000,9 @@ this._hostElement[elementAttributeProperty] = this;</pre>
 
                 <div class="review-card">
                     <span class="num">14 &middot; Real Browser Verification</span>
-                    <h3>In-Browser Mocha + Chai Spies Over Simulated <code>jsdom</code></h3>
+                    <h3>Executing Mocha, Chai &amp; Spies Inside a Real Browser Engine</h3>
                     <p>
-                        Synthetic Node DOM shims like <code>jsdom</code> do not faithfully implement <code>contentEditable</code>, layout-dependent <code>innerText</code>, or W3C <code>Selection</code>/<code>Range</code> geometry. Running Mocha, Chai, and Chai-Spies directly inside a real browser engine (<code>test/index.html</code>) tests genuine DOM behavior, while <code>public/index.html</code> uses ES5 <code>.bind()</code> partial application to wire multi-instance loop handlers without closure variable capture bugs.
+                        Because <code>contentEditable</code>, layout-aware <code>innerText</code>, and W3C <code>Selection</code>/<code>Range</code> geometry depend on a real browser layout engine, <code>test/index.html</code> runs Mocha, Chai, and Chai-Spies directly in the browser against live mounted DOM nodes. Alongside the test runner, <code>public/index.html</code> uses ES5 <code>.bind()</code> partial application to wire multi-instance demo controls cleanly.
                     </p>
                     <pre class="code-snippet">add_email.addEventListener(
   'click',
