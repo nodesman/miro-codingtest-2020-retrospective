@@ -111,9 +111,44 @@
 
         /* Hero / Lead Story Header */
         .hero {
-            padding: 48px 0 42px;
+            padding: 44px 0 40px;
             border-bottom: 1px solid var(--border);
             background: #ffffff;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+            gap: 36px;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 860px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-figure {
+            margin: 0;
+            text-align: center;
+        }
+
+        .hero-figure img {
+            width: 100%;
+            max-width: 410px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .hero-figure figcaption {
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 6px;
+            letter-spacing: 0.02em;
         }
 
         .eyebrow {
@@ -129,23 +164,21 @@
 
         .hero h1 {
             font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-            font-size: 38px;
+            font-size: 36px;
             font-weight: 700;
             font-style: italic;
             line-height: 1.24;
             color: #121212;
-            max-width: 820px;
             margin-bottom: 18px;
             letter-spacing: -0.015em;
         }
 
         .hero-lead {
             font-family: Georgia, 'Times New Roman', serif;
-            font-size: 19.5px;
+            font-size: 19px;
             line-height: 1.62;
             color: var(--text-muted);
-            max-width: 760px;
-            margin-bottom: 30px;
+            margin-bottom: 0;
         }
 
         .meta-strip {
@@ -669,11 +702,19 @@
 
     <section class="hero">
         <div class="container">
-            <div class="eyebrow">Miro Frontend Coding Assessment &middot; April 2020</div>
-            <h1>A Standalone UI SDK Built Directly on Browser Primitives</h1>
-            <p class="hero-lead">
-                Every collaboration tool has an &ldquo;Invite people&rdquo; box where typed or pasted email addresses snap into neat, removable chips. For Miro&rsquo;s April 2020 engineering assessment, I built that component from scratch in 315 lines of plain JavaScript and CSS—with no frameworks or outside libraries—so it worked cleanly across Chrome, Firefox, Safari, and Internet Explorer 11.
-            </p>
+            <div class="hero-grid">
+                <div>
+                    <div class="eyebrow">Miro Frontend Coding Assessment &middot; April 2020</div>
+                    <h1>A Standalone UI SDK Built Directly on Browser Primitives</h1>
+                    <p class="hero-lead">
+                        Every collaboration tool has an &ldquo;Invite people&rdquo; box where typed or pasted email addresses snap into neat, removable chips. For Miro&rsquo;s April 2020 engineering assessment, I built that component from scratch in 315 lines of plain JavaScript and CSS—with no frameworks or outside libraries—so it worked cleanly across Chrome, Firefox, Safari, and Internet Explorer 11.
+                    </p>
+                </div>
+                <figure class="hero-figure">
+                    <img src="public/hero-illustration.jpg" alt="Architectural line-art diagram of the Email Input chip component on raw browser primitives" />
+                    <figcaption>Exploded view: valid email chip, dashed typo validation, and live cursor anchor.</figcaption>
+                </figure>
+            </div>
 
             <div class="meta-strip">
                 <div class="meta-item">
