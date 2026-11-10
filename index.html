@@ -669,10 +669,10 @@
 
     <section class="hero">
         <div class="container">
-            <div class="eyebrow">April 2020 &middot; Frontend Architecture Archive</div>
-            <h1>Miro Frontend Assessment: Zero&#8209;Dependency Email Input SDK</h1>
+            <div class="eyebrow">Miro Frontend Coding Assessment &middot; April 2020</div>
+            <h1>A Standalone UI SDK Built Directly on Browser Primitives</h1>
             <p class="hero-lead">
-                A reusable JavaScript UI library built from scratch in 315 lines of pure JavaScript and CSS, with zero frameworks or external dependencies. Engineered directly on native browser DOM, cursor-selection, and event APIs to run seamlessly across Chrome, Firefox, Safari, and Internet Explorer 11.
+                Every collaboration tool has an &ldquo;Invite people&rdquo; box where typed or pasted email addresses snap into neat, removable chips. For Miro&rsquo;s April 2020 engineering assessment, I built that component from scratch in 315 lines of plain JavaScript and CSS—with no frameworks or outside libraries—so it worked cleanly across Chrome, Firefox, Safari, and Internet Explorer 11.
             </p>
 
             <div class="meta-strip">
@@ -696,7 +696,7 @@
 
             <div class="cta-row">
                 <a href="#live-demo" class="btn btn-primary">Try the Live Demo &darr;</a>
-                <a href="#code-review" class="btn btn-secondary">Read Technical Notes &darr;</a>
+                <a href="#code-review" class="btn btn-secondary">Read Technical Deep Dive &darr;</a>
             </div>
         </div>
     </section>
@@ -706,19 +706,19 @@
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Part I &mdash; Overview</span>
-                <h2 class="section-title">A Standalone UI SDK Built Directly on Browser Primitives</h2>
+                <h2 class="section-title">Simple on the Outside, Careful Under the Hood</h2>
             </div>
 
             <div class="thesis-layout">
                 <div class="personal-note">
                     <p>
-                        For Miro&rsquo;s April 2020 frontend coding assessment, the brief was to build a standalone email-chip input library—similar to the &ldquo;Share board&rdquo; invite field in Miro—that any web application could mount onto a page, instantiate multiple times independently, and control through a clean programmatic API.
+                        Miro asked for a reusable email-input widget—like their own &ldquo;Share board&rdquo; dialog—that any team could drop onto an existing webpage, run multiple times side by side, and hook up to their own buttons and forms.
                     </p>
                     <p>
-                        I built the complete library in <strong>315 lines of pure JavaScript and 70 lines of CSS</strong> with zero external dependencies. Modeling the input container as a single continuous rich-text surface—combining non-editable email chips alongside live typed text—meant managing cursor placement, keyboard boundaries, comma-separated clipboard pasting, and focus styling directly through native browser DOM and Selection APIs across both modern browsers and Internet Explorer 11.
+                        To make typing, line-wrapping, and pasting feel completely natural, I built the whole box as one continuous text surface where finished email chips sit right alongside the letters you are still typing. Doing that without a framework meant handling the browser&rsquo;s quirks by hand: keeping the blinking cursor in the right spot as new chips appear, stopping Backspace from accidentally deleting finished chips, turning pasted comma lists into valid chips and red-underlined typos, and making every detail behave in Internet Explorer 11.
                     </p>
                     <p>
-                        I passed this coding assessment round at Miro on the strength of the zero-dependency SDK design, cross-browser DOM handling, and live in-browser unit test suite, though the role ultimately did not pan out for other reasons.
+                        The finished library came to <strong>315 lines of JavaScript, 70 lines of CSS</strong>, and an automated test suite that runs live in the browser below. I passed this coding round at Miro, though the role ultimately did not pan out for other reasons.
                     </p>
 
                     <div class="signature">
@@ -729,12 +729,12 @@
 
                 <aside class="summary-card">
                     <span class="anatomy-kicker">At a Glance</span>
-                    <h3>Key Engineering Highlights</h3>
+                    <h3>What Was Delivered</h3>
                     <ul class="invariant-list" style="border-top: none; padding-top: 2px; gap: 12px;">
-                        <li><strong>Clean Public SDK:</strong> Five-method API with strict private scope encapsulation and full multi-instance isolation on the same page.</li>
-                        <li><strong>Native Browser DOM Control:</strong> Direct orchestration of rich-text editing, W3C cursor-selection ranges, keyboard boundary guards, and CSS style inheritance.</li>
-                        <li><strong>Cross-Browser &amp; Paste-Safe:</strong> Batch comma-separated clipboard parsing across Chrome, Firefox, Safari, and IE11 using safe DOM node APIs throughout.</li>
-                        <li><strong>Live Browser Test Suite:</strong> Verified with automated Mocha, Chai, and spy assertions executing directly inside a real browser engine below.</li>
+                        <li><strong>315 Lines, Zero Libraries:</strong> Plain JavaScript and CSS from top to bottom—no React, no jQuery, and no polyfills.</li>
+                        <li><strong>Drop-In Reusable Widget:</strong> Multiple independent inputs run side by side on the same page with a clean five-method API.</li>
+                        <li><strong>Works Everywhere (+ IE11):</strong> Smooth typing, cursor placement, and batch clipboard pasting across Chrome, Firefox, Safari, and Internet Explorer 11.</li>
+                        <li><strong>Tested Live in the Browser:</strong> Automated unit tests run directly inside a real browser window right below the demo.</li>
                     </ul>
                 </aside>
             </div>
