@@ -1,10 +1,12 @@
 Emails Input — Zero-Dependency Vanilla JS Component (Miro 2020 Assessment)
 ==========================================================================
 
-> **Live GitHub Pages Retrospective, Interactive Demo & In-Browser Mocha Test Suite**:
-> - **Full Retrospective & Code Review**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/](https://nodesman.github.io/miro-codingtest-2020-retrospective/)**
+> **Live GitHub Pages Retrospective, Browser Internals Review & In-Browser Mocha Test Suite**:
+> - **Full Retrospective & Browser DOM Internals Breakdown**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/](https://nodesman.github.io/miro-codingtest-2020-retrospective/)**
 > - **Standalone Multi-Instance Live Demo**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/public/](https://nodesman.github.io/miro-codingtest-2020-retrospective/public/)**
 > - **Live Browser Mocha + Chai + Spies Test Suite**: **[https://nodesman.github.io/miro-codingtest-2020-retrospective/test/](https://nodesman.github.io/miro-codingtest-2020-retrospective/test/)**
+>
+> **Architectural Highlights (315 LOC, Zero Dependencies)**: Built directly on a composite `contentEditable="true"` surface housing `contentEditable="false"` pill islands and bare `Node.TEXT_NODE` leaves—featuring W3C `Selection`/`Range` caret anchoring, native `Backspace` DOM-desync guards, CSS anonymous text-box color inheritance, bubbling `focusin`/`focusout` + `O(1)` click delegation, zero-`innerHTML` XSS safety, and IE11 (`Trident`) + modern browser compatibility.
 >
 > *Note: While I passed this coding round at Miro, the role ultimately did not pan out for other reasons.*
 

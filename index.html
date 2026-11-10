@@ -37,6 +37,14 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        h1, h2, h3, h4 {
+            text-wrap: balance;
+        }
+
+        p, li {
+            text-wrap: pretty;
+        }
+
         .container {
             max-width: 1080px;
             margin: 0 auto;
@@ -257,16 +265,28 @@
             color: var(--text);
         }
 
+        .thesis-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+            gap: 36px;
+            align-items: start;
+        }
+
+        @media (max-width: 860px) {
+            .thesis-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .personal-note {
-            max-width: 760px;
-            padding: 8px 0 8px 24px;
+            padding: 4px 0 4px 22px;
             border-left: 2px solid #121212;
         }
 
         .personal-note p {
             font-family: Georgia, 'Times New Roman', serif;
-            font-size: 18px;
-            line-height: 1.78;
+            font-size: 17px;
+            line-height: 1.76;
             color: #222222;
             margin-bottom: 18px;
         }
@@ -278,6 +298,108 @@
         .personal-note strong {
             color: #000000;
             font-weight: 700;
+        }
+
+        .dom-anatomy-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 2px solid #121212;
+            padding: 18px 20px;
+        }
+
+        .anatomy-kicker {
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .dom-anatomy-box h3 {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 16.5px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .dom-tree-pre {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 12px 14px;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 11.8px;
+            line-height: 1.55;
+            color: #121212;
+            overflow-x: auto;
+            margin-bottom: 14px;
+        }
+
+        .invariant-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .invariant-list li {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 13.5px;
+            line-height: 1.52;
+            color: var(--text-muted);
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .invariant-list li::before {
+            content: "\25AA";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #121212;
+        }
+
+        .invariant-list li strong {
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12.5px;
+            color: #121212;
+        }
+
+        .subsection-banner {
+            margin: 8px 0 22px;
+            padding: 10px 0 8px;
+            border-top: 2px solid #121212;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .subsection-banner.spaced {
+            margin-top: 44px;
+        }
+
+        .subsection-banner h3 {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .subsection-banner span {
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
         }
 
         .signature {
@@ -512,9 +634,9 @@
             <div class="topbar-inner">
                 <a href="#" class="brand">Raj Sekharan &middot; Amsterdam, Netherlands</a>
                 <nav class="nav-links">
-                    <a href="#overview">Overview</a>
+                    <a href="#overview">Architectural Thesis</a>
                     <a href="#live-demo">Live Demo &amp; Tests</a>
-                    <a href="#code-review">Architectural Review</a>
+                    <a href="#code-review">Browser Internals &amp; SDK Review</a>
                     <a href="#source-code">Source Code</a>
                     <a href="https://github.com/nodesman/miro-codingtest-2020-retrospective" target="_blank">GitHub Repository &nearr;</a>
                 </nav>
@@ -525,9 +647,9 @@
     <section class="hero">
         <div class="container">
             <div class="eyebrow">Engineering Retrospective &middot; April 11–14, 2020 &middot; Amsterdam</div>
-            <h1>Miro Frontend Coding Assessment: Zero-Dependency <code>EmailsInput</code> SDK</h1>
+            <h1>Miro Frontend Coding Assessment: Zero-Dependency <code>EmailsInput</code> SDK &amp; Browser DOM Internals</h1>
             <p class="hero-lead">
-                Built in April 2020 in Amsterdam: a reusable, zero-dependency vanilla JavaScript UI component library (<code>EmailsInput</code>) for entering, pasting, validating, and subscribing to lists of email addresses—complete with IE11 + modern browser compatibility and a Mocha + Chai + Spies unit test suite.
+                Rather than wrapping an HTML <code>&lt;input&gt;</code> tag inside a framework, this 315-line pure ES5 component builds a composite editing surface directly atop the browser&rsquo;s <code>contentEditable</code> engine—orchestrating non-editable pill islands, bare <code>Node.TEXT_NODE</code> leaves, W3C <code>Selection</code> and <code>Range</code> caret geometry, CSS anonymous text-box inheritance, and cross-engine event delegation from IE11 (<code>Trident</code>) to modern <code>Blink</code>, <code>Gecko</code>, and <code>WebKit</code>.
             </p>
 
             <div class="meta-strip">
@@ -540,8 +662,8 @@
                     <span class="meta-value pass">Zero (Pure Vanilla ES5 + SCSS)</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">Browser Support</span>
-                    <span class="meta-value">IE11, Chrome, Firefox, Safari</span>
+                    <span class="meta-label">Browser Engines</span>
+                    <span class="meta-value">IE11 (Trident), Blink, Gecko, WebKit</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Assessment Result</span>
@@ -551,7 +673,7 @@
 
             <div class="cta-row">
                 <a href="#live-demo" class="btn btn-primary">Try the Live Component &amp; Mocha Tests &darr;</a>
-                <a href="#code-review" class="btn btn-secondary">Read the Architectural Review</a>
+                <a href="#code-review" class="btn btn-secondary">Read the Browser Internals Breakdown</a>
                 <a href="#source-code" class="btn btn-secondary">Inspect Source Code (315 LOC)</a>
             </div>
         </div>
@@ -561,25 +683,49 @@
     <section id="overview">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part I &mdash; Engineering Context</span>
-                <h2 class="section-title">Designing a Reusable UI SDK Without Framework Dependencies</h2>
+                <span class="section-tag">Part I &mdash; Architectural Thesis</span>
+                <h2 class="section-title">Why Choosing a Composite <code>contentEditable</code> Surface Required Deep Browser-Engine Mastery</h2>
             </div>
 
-            <div class="personal-note">
-                <p>
-                    The goal of this April 2020 assessment for Miro was to engineer a standalone, drop-in JavaScript component (<code>EmailsInput</code>) that any web application could mount onto arbitrary DOM nodes with zero runtime dependencies, while supporting multiple independent instances on the same page.
-                </p>
-                <p>
-                    Rather than relying on a framework or wrapping a standard HTML <code>&lt;input&gt;</code> tag, I architected <code>EmailsInput</code> around a single <code>contentEditable="true"</code> container housing non-editable pill elements (<code>contentEditable="false"</code>) alongside direct <code>Node.TEXT_NODE</code> nodes, managing cursor placement through the native W3C <code>Range</code> and <code>Selection</code> APIs.
-                </p>
-                <p>
-                    I passed this coding assessment round at Miro on the strength of the zero-dependency SDK architecture, cross-browser DOM/Selection handling, and unit test suite, though the role ultimately did not pan out for other reasons.
-                </p>
+            <div class="thesis-layout">
+                <div class="personal-note">
+                    <p>
+                        When asked to build a multi-email chip input without frameworks, most implementations take the safe shortcut: rendering a Flexbox list of <code>&lt;span&gt;</code> tags followed by a standard HTML <code>&lt;input type="text"&gt;</code> at the tail. That shortcut avoids browser editing internals, at the cost of rigid input box widths, awkward line-wrapping behavior, split focus borders, and unnatural multi-token clipboard paste handling.
+                    </p>
+                    <p>
+                        For this April 2020 Miro SDK, I deliberately took the harder, native-feeling DOM path: making the <strong>entire <code>.emails-input</code> container a single <code>contentEditable="true"</code> editing surface</strong> populated with non-editable pill islands (<code>contentEditable="false"</code>) alongside bare <code>Node.TEXT_NODE</code> leaves.
+                    </p>
+                    <p>
+                        Building directly on mixed editable and non-editable DOM subtrees forces you to take full responsibility for low-level browser mechanics that frameworks normally abstract away: blocking the browser&rsquo;s native rich-text editing engine from silently ripping <code>contentEditable="false"</code> islands out of the DOM on <code>Backspace</code>, keeping a live trailing <code>CharacterData</code> anchor so collapsed W3C <code>Range</code> carets never vanish, reading typed characters from <code>nodeType === 3</code> leaves without scraping text from existing pills, and styling classless anonymous CSS text boxes through parent cascade inheritance.
+                    </p>
+                    <p>
+                        I passed this coding assessment round at Miro on the strength of the zero-dependency SDK architecture, cross-browser DOM and Selection handling, and in-browser unit test suite, though the role ultimately did not pan out for other reasons.
+                    </p>
 
-                <div class="signature">
-                    <span>By Raj Sekharan (Raj Aramudan)</span>
-                    <span>Original commits: April 11–14, 2020 &bull; Archived: November 2026</span>
+                    <div class="signature">
+                        <span>By Raj Sekharan (Raj Aramudan)</span>
+                        <span>Original commits: April 11–14, 2020 &bull; Archived: November 2026</span>
+                    </div>
                 </div>
+
+                <aside class="dom-anatomy-box">
+                    <span class="anatomy-kicker">DOM Subtree Topology</span>
+                    <h3>Hybrid Editable Tree Inside <code>.emails-input</code></h3>
+<pre class="dom-tree-pre">div.emails-input [contentEditable="true"]
+├── span.email-input-valid-email [contentEditable="false"]
+│   ├── #text "john@miro.com"
+│   └── span.delete-item ("x")
+├── span.email-input-invalid-email [contentEditable="false"]
+│   ├── #text "malformed-token"
+│   └── span.delete-item ("x")
+└── #text ""  &larr; Persistent CharacterData Caret Anchor</pre>
+                    <ul class="invariant-list">
+                        <li><strong>State vs. DOM Parity:</strong> Intercepts <code>Backspace</code> at <code>anchorOffset === 0</code> and off-node focus so native <code>contentEditable</code> routines cannot delete pills behind <code>this._emails</code>.</li>
+                        <li><strong>Legal Caret Target:</strong> Seeds an explicit trailing <code>document.createTextNode('')</code> after tokenization so <code>Range.setStart(lastText, 0)</code> always resolves across Chrome, Firefox, Safari, and IE11.</li>
+                        <li><strong>O(1) Event Listeners:</strong> Uses bubbling <code>focusin</code>/<code>focusout</code> and a single root <code>click</code> delegator regardless of whether 5 or 5,000 CSV emails are mounted.</li>
+                        <li><strong>Parser-Boundary XSS Safety:</strong> Zero <code>innerHTML</code> calls across all 315 lines; arbitrary invalid paste tokens are constructed strictly via <code>createElement</code>, <code>innerText</code>, and <code>createTextNode</code>.</li>
+                    </ul>
+                </aside>
             </div>
         </div>
     </section>
@@ -588,25 +734,25 @@
     <section id="live-demo">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part II &mdash; Live Interactive Component &amp; Unit Test Runner</span>
+                <span class="section-tag">Part II &mdash; Live Interactive Component &amp; Real-Browser Test Runner</span>
                 <h2 class="section-title">Interactive Multi-Instance Demo &amp; In-Browser Mocha Suite</h2>
             </div>
 
             <div class="demo-instructions">
                 <div class="step-card">
-                    <span class="step-num">Feature 1 &middot; Type or Paste CSV</span>
-                    <h4>Type an Email + Comma / Enter</h4>
-                    <p>Click inside any input box below, type an email address (valid like <code>alex@miro.com</code> or invalid like <code>invalid-email</code>) and press <code>,</code>, <code>Enter</code>, or click outside.</p>
+                    <span class="step-num">Probe 1 &middot; Caret-Preserving Tokenization</span>
+                    <h4>Type + Comma, Enter, or Blur</h4>
+                    <p>Click inside any input box below, type <code>alex@miro.com</code> or <code>invalid-token</code>, and press <code>,</code> or <code>Enter</code>. Each pill inserts <em>before</em> the active <code>TEXT_NODE</code> while keeping the caret pinned right.</p>
                 </div>
                 <div class="step-card">
-                    <span class="step-num">Feature 2 &middot; Programmatic API</span>
-                    <h4>Add Random Email &amp; Count</h4>
-                    <p>Click <strong>Add email</strong> or <strong>Get emails count</strong> on any of the three independent form instances to test <code>instance.addEmail()</code> and <code>instance.getEmails()</code>.</p>
+                    <span class="step-num">Probe 2 &middot; Backspace &amp; CSV Paste Guards</span>
+                    <h4>Test Boundary Backspace &amp; XSS Paste</h4>
+                    <p>Press <code>Backspace</code> right after a pill to see native <code>contentEditable</code> pill destruction blocked, or paste <code>a@b.com, &lt;img src=x onerror=alert(1)&gt;, c@d.com</code> to verify XSS-inert batch parsing.</p>
                 </div>
                 <div class="step-card">
-                    <span class="step-num">Feature 3 &middot; Live Mocha Suite</span>
-                    <h4>In-Browser Unit Tests</h4>
-                    <p>Scroll to the second window below to see the live <code>test/index.html</code> Mocha + Chai + Chai-Spies test runner executing against <code>src/emails-input.js</code>.</p>
+                    <span class="step-num">Probe 3 &middot; Multi-Instance SDK &amp; Mocha</span>
+                    <h4>Isolated Instances &amp; Chai Spies</h4>
+                    <p>Test <strong>Add email</strong> and <strong>Get emails count</strong> across all three isolated instances, then inspect the live in-browser <code>test/index.html</code> Mocha + Chai + Spies runner below.</p>
                 </div>
             </div>
 
@@ -638,16 +784,154 @@
     <section id="code-review">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part III &mdash; Architectural &amp; Code Review</span>
-                <h2 class="section-title">Key Engineering Decisions in <code>src/emails-input.js</code></h2>
+                <span class="section-tag">Part III &mdash; Browser Internals &amp; SDK Engineering Breakdown</span>
+                <h2 class="section-title">Fifteen Low-Level DOM, CSS Render-Tree &amp; SDK Decisions in <code>src/emails-input.js</code></h2>
+            </div>
+
+            <div class="subsection-banner">
+                <h3>A. Browser Engine, DOM, Selection &amp; CSS Render-Tree Internals</h3>
+                <span>Cards 01–08 &middot; Engine Mechanics</span>
             </div>
 
             <div class="review-grid">
                 <div class="review-card">
-                    <span class="num">01 &middot; Encapsulation Pattern</span>
-                    <h3>IIFE Closure + Prototype Public API</h3>
+                    <span class="num">01 &middot; Rich-Text Editing Engine</span>
+                    <h3>Blocking Native <code>contentEditable</code> Backspace Desynchronization</h3>
                     <p>
-                        All internal helpers (<code>_addTextContentAsAnItem</code>, <code>_notifyListeners</code>, <code>bindEvents</code>, <code>deleteItem</code>) remain strictly private inside the outer IIFE closure and are invoked via <code>.call(this)</code> and <code>.bind(this)</code>, exposing only the 5 public methods on <code>EmailsInput.prototype</code>.
+                        Inside a <code>contentEditable="true"</code> host, pressing <code>Backspace</code> when the caret sits at offset <code>0</code> of the trailing text node (<code>anchorOffset === 0</code>)—or when selection focus drifts onto a sibling node (<code>focusNode !== lastTextNode</code>)—triggers the browser&rsquo;s native rich-text editing engine to rip the preceding <code>contentEditable="false"</code> pill straight out of the DOM without updating <code>this._emails</code>. Intercepting both conditions in <code>onKeyDown</code> prevents silent DOM-to-state corruption.
+                    </p>
+                    <pre class="code-snippet">if (event.keyCode === BACKSPACE) {
+  var currentSelection = getSelection();
+  var lastTextNode = getLastTextNode(event.target);
+  if (currentSelection.focusNode !== lastTextNode) {
+    event.preventDefault();
+    return;
+  }
+  if (currentSelection.anchorOffset === 0) {
+    event.preventDefault();
+  }
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">02 &middot; W3C Selection &amp; Range Geometry</span>
+                    <h3>Seeding a Persistent <code>CharacterData</code> Caret Anchor</h3>
+                    <p>
+                        If a <code>contentEditable="true"</code> element contains only <code>contentEditable="false"</code> child <code>&lt;span&gt;</code> nodes and zero trailing <code>Node.TEXT_NODE</code>, browser layout engines have no legal <code>CharacterData</code> target for a collapsed caret—causing vanished cursors in Firefox/IE11 or rogue <code>&lt;div&gt;&lt;br&gt;&lt;/div&gt;</code> insertions in Chrome. Appending an explicit <code>document.createTextNode('')</code> after tokenization guarantees <code>range.setStart(lastText, 0)</code> always lands cleanly.
+                    </p>
+                    <pre class="code-snippet">deleteAllDirectTextNodes(containerElement);
+var textNode = document.createTextNode('');
+containerElement.appendChild(textNode);
+/* ... on container click: */
+var range = document.createRange();
+range.setStart(lastText, 0);
+range.collapse(true);
+sel.removeAllRanges();
+sel.addRange(range);</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">03 &middot; DOM Tree Traversal</span>
+                    <h3>Walking Direct <code>Node.TEXT_NODE</code> Leaves vs. <code>textContent</code> Pollution</h3>
+                    <p>
+                        Reading <code>container.textContent</code> or <code>container.innerText</code> recursively concatenates every descendant element&rsquo;s text—meaning existing pills like <code>john@miro.com</code> and their child <code>x</code> delete buttons would be scraped right back into newly typed input (<code>"john@miro.comxnew@miro.com"</code>). Walking direct <code>childNodes</code> and filtering strictly on <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>) isolates only raw user keystrokes.
+                    </p>
+                    <pre class="code-snippet">function getDirectTextContent (element) {
+  var text = '';
+  for (var iter = 0; iter &lt; element.childNodes.length; iter++) {
+    var childNode = element.childNodes[iter];
+    if (childNode.nodeType === Node.TEXT_NODE) {
+      text += childNode.textContent;
+    }
+  }
+  return text;
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">04 &middot; Cursor-Preserving Mutation</span>
+                    <h3>Pre-Caret Pill Insertion via <code>insertBefore(node, lastTextNode)</code></h3>
+                    <p>
+                        Calling <code>appendChild(node)</code> when minting a pill places the new <code>&lt;span&gt;</code> <em>after</em> the active text node where the user is typing—trapping the blinking cursor to the left of the newly created pill. Scanning <code>childNodes</code> backward in <code>getLastTextNode()</code> and invoking <code>insertBefore(node, lastTextNode)</code> snaps every pill cleanly to the left while keeping the active caret anchored at the tail.
+                    </p>
+                    <pre class="code-snippet">function getLastTextNode (element) {
+  for (var iter = element.childNodes.length - 1; iter &gt;= 0; iter--) {
+    if (element.childNodes[iter].nodeType === Node.TEXT_NODE) {
+      return element.childNodes[iter];
+    }
+  }
+}
+this._componentRoot.insertBefore(node, getLastTextNode(_componentRoot));</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">05 &middot; CSS Render-Tree Inheritance</span>
+                    <h3>Styling Classless Anonymous <code>TEXT_NODE</code> Boxes</h3>
+                    <p>
+                        HTML <code>contentEditable</code> divs do not support native <code>placeholder</code> attributes, and a bare DOM <code>Node.TEXT_NODE</code> (<code>this._placeholderElement</code>) cannot carry CSS classes or inline styles—it creates an anonymous inline box in the browser&rsquo;s render tree that inherits <code>color</code> from its parent. Setting <code>.emails-input { color: #C3C2CF }</code> styles the unfocused placeholder gray while pills override to <code>#050038</code>, and toggling <code>.focus { color: #000 }</code> on <code>focusin</code> turns live typing black.
+                    </p>
+                    <pre class="code-snippet">.emails-input {
+  color: #C3C2CF;
+  &amp;.focus { color: #000; }
+  .email-input-valid-email { color: #050038; }
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">06 &middot; W3C UI Events Propagation</span>
+                    <h3>Bubbling <code>focusin</code> / <code>focusout</code> &amp; Single-Listener Click Delegation</h3>
+                    <p>
+                        Rather than binding non-bubbling <code>focus</code>/<code>blur</code> handlers or attaching per-pill click listeners, <code>bindEvents</code> registers bubbling <code>focusin</code>/<code>focusout</code> listeners and a single root <code>click</code> handler. Inside <code>onClick</code>, <code>event.target</code> catches <code>.delete-item</code> clicks while <code>event.currentTarget</code> handles container caret focus—giving <code>O(1)</code> listener memory with zero detached-DOM listener leaks across thousands of pasted pills.
+                    </p>
+                    <pre class="code-snippet">function onClick (event) {
+  if (event.target.classList.contains('delete-item')) {
+    deleteItem.call(this, event.target.parentNode);
+    return;
+  }
+  var componentRoot = event.currentTarget;
+  /* ... collapse Range onto lastTextNode ... */
+}</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">07 &middot; Cross-Engine Clipboard &amp; ES5 Runtime</span>
+                    <h3>IE11 (<code>Trident</code>) vs. W3C Clipboard APIs &amp; Zero-Polyfill ES5</h3>
+                    <p>
+                        Supporting IE11 alongside modern browsers without polyfills required handling two distinct runtime gaps: branching between IE&rsquo;s global <code>window.clipboardData.getData('text')</code> and W3C&rsquo;s <code>event.clipboardData.getData('text')</code> for comma-separated batch pastes, and replacing ES6 <code>Object.assign</code> in the constructor with explicit ES5 option resolution.
+                    </p>
+                    <pre class="code-snippet">if (!!window.clipboardData) {
+  pasteContent = window.clipboardData.getData('text');
+} else {
+  pasteContent = event.clipboardData.getData('text');
+}
+var emails = pasteContent.split(',');</pre>
+                </div>
+
+                <div class="review-card">
+                    <span class="num">08 &middot; Parser-Boundary Security</span>
+                    <h3>DOM XSS Immunity by Construction (Zero <code>innerHTML</code>)</h3>
+                    <p>
+                        Because invalid tokens are rendered visibly inline so users can see and remove typos after pasting a CSV list, any implementation using template strings and <code>innerHTML</code> triggers immediate DOM XSS when pasted payloads contain <code>&lt;img src=x onerror=...&gt;</code>. Across all 315 lines, <code>innerHTML</code> is never invoked once—every node is built via <code>document.createElement</code>, <code>.innerText</code>, and <code>document.createTextNode</code>.
+                    </p>
+                    <pre class="code-snippet">var invalidEmailItem = createElement('span', {
+  'class': 'email-input-invalid-email',
+  'contentEditable': 'false'
+});
+invalidEmailItem.innerText = content;</pre>
+                </div>
+            </div>
+
+            <div class="subsection-banner spaced">
+                <h3>B. JavaScript SDK Architecture, State Integrity &amp; Real-Browser Verification</h3>
+                <span>Cards 09–15 &middot; Library Design</span>
+            </div>
+
+            <div class="review-grid">
+                <div class="review-card">
+                    <span class="num">09 &middot; Encapsulation Pattern</span>
+                    <h3>True Private Scope via IIFE Closure + <code>EmailsInput.prototype</code></h3>
+                    <p>
+                        All internal DOM mutators and event handlers (<code>_addTextContentAsAnItem</code>, <code>_notifyListeners</code>, <code>bindEvents</code>, <code>deleteItem</code>) live strictly inside the outer IIFE lexical closure and receive instance context explicitly via <code>.call(this)</code> and <code>.bind(this)</code>, exposing only the 5 documented contract methods on <code>EmailsInput.prototype</code>.
                     </p>
                     <pre class="code-snippet">function bindEvents (elements) {
   var container = elements.container;
@@ -660,25 +944,24 @@
                 </div>
 
                 <div class="review-card">
-                    <span class="num">02 &middot; Low-Level DOM Selection</span>
-                    <h3>W3C <code>Range</code>, <code>Selection</code> &amp; <code>TEXT_NODE</code> Control</h3>
+                    <span class="num">10 &middot; DOM Object Identity</span>
+                    <h3>Deleting Pills by Exact <code>HTMLElement</code> Reference</h3>
                     <p>
-                        Using a <code>contentEditable="true"</code> root containing <code>contentEditable="false"</code> chip spans required explicit caret management via <code>document.createRange()</code> and <code>window.getSelection()</code>, plus guarding Backspace on <code>focusNode</code> and <code>anchorOffset</code>.
+                        <code>deleteItem(node)</code> locates the record in <code>this._emails</code> by comparing exact DOM element object identity (<code>current.node === node</code>) rather than matching email strings. This guarantees that if a user enters duplicate email addresses, clicking <code>x</code> removes the exact pill clicked—and avoids reading <code>node.innerText</code>, which carries the trailing <code>'x'</code> button label.
                     </p>
-                    <pre class="code-snippet">var range = document.createRange();
-var sel = window.getSelection();
-var lastText = getLastTextNode(componentRoot);
-range.setStart(lastText, 0);
-range.collapse(true);
-sel.removeAllRanges();
-sel.addRange(range);</pre>
+                    <pre class="code-snippet">for (var iter = 0; iter &lt; this._emails.length; iter++) {
+  var current = this._emails[iter];
+  if (current.node === node) {
+    correspondingItem = current;
+  }
+}</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">03 &middot; Defensive SDK Guards</span>
-                    <h3>Duplicate-Mount Prevention &amp; Input Validation</h3>
+                    <span class="num">11 &middot; DOM Wrapper Expando Guard</span>
+                    <h3>Duplicate-Mount Prevention Without Markup Pollution</h3>
                     <p>
-                        The constructor stamps <code>hostElement['x-emails-input'] = this</code> and throws if a consumer attempts to mount a second instance on the same element. Likewise, <code>setEmails()</code> validates <code>emailsList instanceof Array</code> before mutating state.
+                        Rather than calling <code>setAttribute</code> (which serializes objects to <code>"[object Object]"</code> in the HTML DOM), the constructor attaches an expando reference <code>hostElement['x-emails-input'] = this</code> directly onto the JS <code>HTMLElement</code> wrapper and throws deterministically on duplicate instantiation. Likewise, <code>setEmails()</code> guards <code>emailsList instanceof Array</code> up front.
                     </p>
                     <pre class="code-snippet">var elementAttributeProperty = 'x-emails-input';
 if (typeof hostElement[elementAttributeProperty] !== 'undefined') {
@@ -688,48 +971,23 @@ this._hostElement[elementAttributeProperty] = this;</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">04 &middot; State Immutability</span>
-                    <h3>Defensive Array Copies Verified by Unit Tests</h3>
+                    <span class="num">12 &middot; State Immutability &amp; Idempotency</span>
+                    <h3>Defensive Array Copies &amp; <code>EventTarget</code>-Style Listener Deduplication</h3>
                     <p>
-                        <code>getEmails()</code>, <code>getAllItems()</code>, and <code>_notifyListeners()</code> always return fresh array projections via <code>.map()</code> so callers cannot mutate internal state—explicitly verified with <code>expect(currentListOfEmails).to.not.equal(emails)</code> in Mocha.
+                        <code>getEmails()</code>, <code>getAllItems()</code>, and <code>_notifyListeners()</code> always allocate fresh array projections via <code>.map()</code> so consumers cannot mutate internal SDK state—explicitly asserted via <code>expect(currentListOfEmails).to.not.equal(emails)</code> in Chai. Meanwhile, <code>addChangeListener</code> deduplicates function references via <code>indexOf(listener) === -1</code>, matching native <code>addEventListener</code> semantics.
                     </p>
-                    <pre class="code-snippet">EmailsInput.prototype.getAllItems = function () {
-  return this._emails.map(function (item) {
-    return item.email;
-  });
+                    <pre class="code-snippet">EmailsInput.prototype.addChangeListener = function (listener) {
+  if (this._changeListeners.indexOf(listener) === -1) {
+    this._changeListeners.push(listener);
+  }
 };</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">05 &middot; Cross-Browser Clipboard</span>
-                    <h3>IE11 &amp; Modern CSV Paste Handling</h3>
+                    <span class="num">13 &middot; Visual Typography &amp; API Ergonomics</span>
+                    <h3>Asymmetric Sibling Combinators (<code>7px</code> vs. <code>3px</code>) &amp; Dual Getters</h3>
                     <p>
-                        Supporting IE11 alongside modern browsers required branching between <code>window.clipboardData.getData('text')</code> (IE11) and <code>event.clipboardData.getData('text')</code> (W3C), splitting comma-separated batches automatically.
-                    </p>
-                    <pre class="code-snippet">if (!!window.clipboardData) {
-  pasteContent = window.clipboardData.getData('text');
-} else {
-  pasteContent = event.clipboardData.getData('text');
-}
-var emails = pasteContent.split(',');</pre>
-                </div>
-
-                <div class="review-card">
-                    <span class="num">06 &middot; Cursor-Preserving Insertion</span>
-                    <h3>Inserting Pills Before the Active Cursor Text Node</h3>
-                    <p>
-                        Calling <code>appendChild(node)</code> would place new email pills <em>after</em> the text node where the user is typing, trapping the caret to the left of the new pill. Finding <code>lastTextNode</code> and calling <code>insertBefore(node, lastTextNode)</code> keeps the active typing cursor anchored at the far right, just like Gmail&rsquo;s <code>To:</code> field.
-                    </p>
-                    <pre class="code-snippet">var _componentRoot = this._componentRoot;
-var lastTextNode = getLastTextNode(_componentRoot);
-this._componentRoot.insertBefore(node, lastTextNode);</pre>
-                </div>
-
-                <div class="review-card">
-                    <span class="num">07 &middot; Visual Typography Combinators</span>
-                    <h3>Asymmetric Sibling Spacing (<code>7px</code> vs. <code>3px</code>)</h3>
-                    <p>
-                        Valid emails sit inside a visible pill background (<code>rgba(102, 153, 255, 0.2)</code>) and only need a <code>3px</code> gap. Invalid emails have a transparent background with a <code>1px dashed #f00</code> bottom border—so items following an invalid email receive a wider <code>7px</code> margin to prevent adjacent red dashed underlines from visually merging.
+                        Valid emails sit inside a filled pill (<code>rgba(102, 153, 255, 0.2)</code>) needing only a <code>3px</code> gap, whereas invalid tokens use a transparent background with a <code>1px dashed #f00</code> underline—so adjacent siblings after an invalid token receive a wider <code>7px</code> margin to stop two red dashed borders from visually merging into one line, paired with non-destructive <code>getEmails()</code> vs. <code>getAllItems()</code> getters.
                     </p>
                     <pre class="code-snippet">.email-input-invalid-email + .email-input-invalid-email {
   margin-left: 7px;
@@ -740,37 +998,10 @@ this._componentRoot.insertBefore(node, lastTextNode);</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">08 &middot; Non-Destructive Validation</span>
-                    <h3>Dual Retrieval API: <code>getEmails()</code> vs. <code>getAllItems()</code></h3>
+                    <span class="num">14 &middot; Real Browser Verification</span>
+                    <h3>In-Browser Mocha + Chai Spies Over Simulated <code>jsdom</code></h3>
                     <p>
-                        Rather than silently discarding malformed emails when a user pastes a messy CSV batch, invalid tokens are rendered inline with a dashed red underline so the user can inspect and delete them, while the SDK separates <code>getEmails()</code> (strictly valid addresses) from <code>getAllItems()</code> (all tokens).
-                    </p>
-                    <pre class="code-snippet">EmailsInput.prototype.getEmails = function () {
-  return this._emails
-    .filter(function (item) { return item.isValid === true; })
-    .map(function (item) { return item.email; });
-};</pre>
-                </div>
-
-                <div class="review-card">
-                    <span class="num">09 &middot; Placeholder Text Node Lifecycle</span>
-                    <h3>Dynamic Placeholder on <code>contentEditable</code></h3>
-                    <p>
-                        Because <code>contentEditable="true"</code> <code>&lt;div&gt;</code> elements do not support the native HTML <code>placeholder</code> attribute—and the spec required the placeholder to appear at the end of existing pills when unfocused—<code>this._placeholderElement</code> is managed as a live <code>Node.TEXT_NODE</code> attached on <code>focusout</code> and removed on <code>focusin</code>.
-                    </p>
-                    <pre class="code-snippet">function onGainFocus (event) {
-  if (this._placeholderElement.parentNode !== null) {
-    this._placeholderElement.parentNode.removeChild(this._placeholderElement);
-  }
-  event.target.classList.add('focus');
-}</pre>
-                </div>
-
-                <div class="review-card">
-                    <span class="num">10 &middot; Partial Function Application</span>
-                    <h3>Avoiding ES5 Loop Closure Bugs via <code>.bind()</code></h3>
-                    <p>
-                        In <code>public/index.html</code>, wiring button handlers across multiple form instances inside an ES5 <code>for (var iter...)</code> loop used <code>.bind(add_email, emailsInputInstance)</code> to partially apply each instance by value—avoiding the classic ES5 shared loop-variable closure bug.
+                        Synthetic Node DOM shims like <code>jsdom</code> do not faithfully implement <code>contentEditable</code>, layout-dependent <code>innerText</code>, or W3C <code>Selection</code>/<code>Range</code> geometry. Running Mocha, Chai, and Chai-Spies directly inside a real browser engine (<code>test/index.html</code>) tests genuine DOM behavior, while <code>public/index.html</code> uses ES5 <code>.bind()</code> partial application to wire multi-instance loop handlers without closure variable capture bugs.
                     </p>
                     <pre class="code-snippet">add_email.addEventListener(
   'click',
@@ -779,10 +1010,10 @@ this._componentRoot.insertBefore(node, lastTextNode);</pre>
                 </div>
 
                 <div class="review-card">
-                    <span class="num">11 &middot; Retrospective Code Audit Notes</span>
-                    <h3>Three Edge Cases Identified in 2026 Review</h3>
+                    <span class="num">15 &middot; 2026 Retrospective Code Notes</span>
+                    <h3>Three Subtle Edge Cases Noted on Re-Inspection</h3>
                     <p>
-                        Reviewing the 2020 code with fresh eyes highlights three subtle edge cases: (1) <code>setEmails()</code> removes DOM nodes but should also reset <code>this._emails = []</code> before re-adding; (2) <code>deleteAllDirectTextNodes</code> iterates forward over a live <code>childNodes</code> list rather than backward; and (3) clicking <code>.delete-item</code> should invoke <code>_notifyListeners.call(this)</code>.
+                        Re-reading the 2020 code six years later highlights three small edge cases worth noting for completeness: (1) <code>setEmails()</code> removes existing pill DOM nodes and should also reset <code>this._emails = []</code> before populating the new array; (2) <code>deleteAllDirectTextNodes</code> iterates forward over a live <code>childNodes</code> collection rather than backward like <code>getLastTextNode</code>; and (3) clicking <code>.delete-item</code> should also fire <code>_notifyListeners.call(this)</code>.
                     </p>
                     <pre class="code-snippet">for (var iter = element.childNodes.length - 1; iter &gt;= 0; iter--) {
   var currentNode = element.childNodes[iter];
