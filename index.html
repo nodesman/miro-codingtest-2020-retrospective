@@ -746,17 +746,17 @@
     <section id="overview">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part I &mdash; Overview</span>
-                <h2 class="section-title">Simple on the Outside, Careful Under the Hood</h2>
+                <span class="section-tag">Part I &mdash; The Brief</span>
+                <h2 class="section-title">Miro asked for a reusable email-input widget—like their own &ldquo;Share board&rdquo; dialog</h2>
             </div>
 
             <div class="thesis-layout">
                 <div class="personal-note">
                     <p>
-                        Miro asked for a reusable email-input widget—like their own &ldquo;Share board&rdquo; dialog—that any team could drop onto an existing webpage, run multiple times side by side, and hook up to their own buttons and forms.
+                        Any product team needed to be able to drop the widget onto an existing webpage, run multiple independent instances side by side, and hook it up to their own buttons and forms. To make typing, line-wrapping, and pasting feel completely natural, I built the whole box as one continuous text surface where finished email chips sit right alongside the letters you are still typing.
                     </p>
                     <p>
-                        To make typing, line-wrapping, and pasting feel completely natural, I built the whole box as one continuous text surface where finished email chips sit right alongside the letters you are still typing. Doing that without a framework meant handling the browser&rsquo;s quirks by hand: keeping the blinking cursor in the right spot as new chips appear, stopping Backspace from accidentally deleting finished chips, turning pasted comma lists into valid chips and red-underlined typos, and making every detail behave in Internet Explorer 11.
+                        Doing that without a framework meant handling the browser&rsquo;s quirks by hand: keeping the blinking cursor in the right spot as new chips appear, stopping Backspace from accidentally deleting finished chips, turning pasted comma lists into valid chips and red-underlined typos, and making every detail behave in Internet Explorer 11.
                     </p>
                     <p>
                         The finished library came to <strong>315 lines of JavaScript, 70 lines of CSS</strong>, and an automated test suite that runs live in the browser below. I passed this coding round at Miro, though the role ultimately did not pan out for other reasons.
