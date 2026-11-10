@@ -543,7 +543,7 @@
             border: 1px solid var(--border);
             padding: 10px 12px;
             font-family: Consolas, 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11.2px;
             line-height: 1.5;
             color: var(--text);
             overflow-x: auto;
@@ -712,13 +712,13 @@
                     <span class="anatomy-kicker">DOM Subtree Topology</span>
                     <h3>Hybrid Editable Tree Inside <code>.emails-input</code></h3>
 <pre class="dom-tree-pre">div.emails-input [contentEditable="true"]
-├── span.email-input-valid-email [contentEditable="false"]
+├── span.valid-email [contentEditable="false"]
 │   ├── #text "john@miro.com"
 │   └── span.delete-item ("x")
-├── span.email-input-invalid-email [contentEditable="false"]
+├── span.invalid-email [contentEditable="false"]
 │   ├── #text "malformed-token"
 │   └── span.delete-item ("x")
-└── #text ""  &larr; Persistent CharacterData Caret Anchor</pre>
+└── #text "" &larr; Caret &amp; Placeholder Anchor</pre>
                     <ul class="invariant-list">
                         <li><strong>State vs. DOM Parity:</strong> Intercepts <code>Backspace</code> at <code>anchorOffset === 0</code> and off-node focus so native <code>contentEditable</code> routines cannot delete pills behind <code>this._emails</code>.</li>
                         <li><strong>Legal Caret Target:</strong> Seeds an explicit trailing <code>document.createTextNode('')</code> after tokenization so <code>Range.setStart(lastText, 0)</code> always resolves across Chrome, Firefox, Safari, and IE11.</li>
@@ -801,13 +801,13 @@
                         Inside a <code>contentEditable="true"</code> host, pressing <code>Backspace</code> when the caret sits at offset <code>0</code> of the trailing text node (<code>anchorOffset === 0</code>)—or when selection focus drifts onto a sibling node (<code>focusNode !== lastTextNode</code>)—triggers the browser&rsquo;s native rich-text editing engine to rip the preceding <code>contentEditable="false"</code> pill straight out of the DOM without updating <code>this._emails</code>. Intercepting both conditions in <code>onKeyDown</code> prevents silent DOM-to-state corruption.
                     </p>
                     <pre class="code-snippet">if (event.keyCode === BACKSPACE) {
-  var currentSelection = getSelection();
-  var lastTextNode = getLastTextNode(event.target);
-  if (currentSelection.focusNode !== lastTextNode) {
+  var sel = getSelection();
+  var lastText = getLastTextNode(event.target);
+  if (sel.focusNode !== lastText) {
     event.preventDefault();
     return;
   }
-  if (currentSelection.anchorOffset === 0) {
+  if (sel.anchorOffset === 0) {
     event.preventDefault();
   }
 }</pre>
@@ -836,12 +836,12 @@ sel.addRange(range);</pre>
                     <p>
                         Reading <code>container.textContent</code> or <code>container.innerText</code> recursively concatenates every descendant element&rsquo;s text—meaning existing pills like <code>john@miro.com</code> and their child <code>x</code> delete buttons would be scraped right back into newly typed input (<code>"john@miro.comxnew@miro.com"</code>). Walking direct <code>childNodes</code> and filtering strictly on <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>) isolates only raw user keystrokes.
                     </p>
-                    <pre class="code-snippet">function getDirectTextContent (element) {
+                    <pre class="code-snippet">function getDirectTextContent (el) {
   var text = '';
-  for (var iter = 0; iter &lt; element.childNodes.length; iter++) {
-    var childNode = element.childNodes[iter];
-    if (childNode.nodeType === Node.TEXT_NODE) {
-      text += childNode.textContent;
+  for (var i = 0; i &lt; el.childNodes.length; i++) {
+    var node = el.childNodes[i];
+    if (node.nodeType === Node.TEXT_NODE) {
+      text += node.textContent;
     }
   }
   return text;
@@ -854,14 +854,15 @@ sel.addRange(range);</pre>
                     <p>
                         Calling <code>appendChild(node)</code> when minting a pill places the new <code>&lt;span&gt;</code> <em>after</em> the active text node where the user is typing—trapping the blinking cursor to the left of the newly created pill. Scanning <code>childNodes</code> backward in <code>getLastTextNode()</code> and invoking <code>insertBefore(node, lastTextNode)</code> snaps every pill cleanly to the left while keeping the active caret anchored at the tail.
                     </p>
-                    <pre class="code-snippet">function getLastTextNode (element) {
-  for (var iter = element.childNodes.length - 1; iter &gt;= 0; iter--) {
-    if (element.childNodes[iter].nodeType === Node.TEXT_NODE) {
-      return element.childNodes[iter];
+                    <pre class="code-snippet">function getLastTextNode (el) {
+  for (var i = el.childNodes.length - 1; i &gt;= 0; i--) {
+    if (el.childNodes[i].nodeType === Node.TEXT_NODE) {
+      return el.childNodes[i];
     }
   }
 }
-this._componentRoot.insertBefore(node, getLastTextNode(_componentRoot));</pre>
+var lastText = getLastTextNode(_componentRoot);
+_componentRoot.insertBefore(node, lastText);</pre>
                 </div>
 
                 <div class="review-card">
