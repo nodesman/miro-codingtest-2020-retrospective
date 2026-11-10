@@ -172,12 +172,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
+            flex-wrap: nowrap;
+            gap: 14px;
             padding: 16px 0;
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
             margin-bottom: 0;
+        }
+
+        @media (max-width: 960px) {
+            .meta-strip {
+                flex-wrap: wrap;
+            }
         }
 
         .meta-item {
@@ -185,7 +191,7 @@
             flex-direction: column;
             gap: 3px;
             border-right: 1px solid var(--border-subtle);
-            padding-right: 18px;
+            padding-right: 14px;
         }
 
         .meta-item.no-divider {
@@ -209,9 +215,10 @@
 
         .meta-value {
             font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 13.5px;
+            font-size: 13px;
             color: var(--text);
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .meta-value.pass {
