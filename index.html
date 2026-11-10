@@ -111,8 +111,8 @@
 
         /* Hero / Lead Story Header */
         .hero {
-            padding: 38px 0 32px;
-            border-bottom: 1px solid var(--border-dark);
+            padding: 48px 0 42px;
+            border-bottom: 1px solid var(--border);
             background: #ffffff;
         }
 
@@ -122,45 +122,40 @@
             font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--text);
-            margin-bottom: 12px;
-            letter-spacing: 0.07em;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+            letter-spacing: 0.08em;
         }
 
         .hero h1 {
             font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 700;
             font-style: italic;
             line-height: 1.24;
             color: #121212;
-            max-width: 920px;
-            margin-bottom: 16px;
+            max-width: 820px;
+            margin-bottom: 18px;
             letter-spacing: -0.015em;
-        }
-
-        .hero h1 code {
-            font-style: normal;
-            font-size: 88%;
         }
 
         .hero-lead {
             font-family: Georgia, 'Times New Roman', serif;
-            font-size: 19px;
-            line-height: 1.55;
+            font-size: 19.5px;
+            line-height: 1.62;
             color: var(--text-muted);
-            max-width: 840px;
-            margin-bottom: 26px;
+            max-width: 760px;
+            margin-bottom: 30px;
         }
 
         .meta-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            padding: 16px 0;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 20px;
+            padding: 18px 0;
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
-            margin-bottom: 22px;
+            margin-bottom: 26px;
         }
 
         .meta-item {
@@ -236,14 +231,14 @@
         }
 
         section {
-            padding: 40px 0;
-            border-bottom: 1px solid var(--border-dark);
+            padding: 46px 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .section-header {
-            margin-bottom: 24px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 26px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .section-tag {
@@ -300,11 +295,38 @@
             font-weight: 700;
         }
 
-        .dom-anatomy-box {
+        .dom-topology-banner {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+            gap: 28px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-top: 2px solid #121212;
-            padding: 18px 20px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            align-items: center;
+        }
+
+        @media (max-width: 860px) {
+            .dom-topology-banner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dom-topology-banner .dom-tree-pre {
+            margin-bottom: 0;
+        }
+
+        .dom-topology-banner .invariant-list {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .summary-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 2px solid #121212;
+            padding: 22px 24px;
         }
 
         .anatomy-kicker {
@@ -318,7 +340,8 @@
             margin-bottom: 6px;
         }
 
-        .dom-anatomy-box h3 {
+        .summary-card h3,
+        .dom-topology-banner h3 {
             font-family: 'Libre Baskerville', Georgia, serif;
             font-size: 16.5px;
             font-weight: 700;
@@ -634,11 +657,11 @@
             <div class="topbar-inner">
                 <a href="#" class="brand">Raj Sekharan &middot; Amsterdam, Netherlands</a>
                 <nav class="nav-links">
-                    <a href="#overview">Architectural Thesis</a>
-                    <a href="#live-demo">Live Demo &amp; Tests</a>
-                    <a href="#code-review">Browser Internals &amp; SDK Review</a>
+                    <a href="#overview">Overview</a>
+                    <a href="#live-demo">Live Demo</a>
+                    <a href="#code-review">Technical Review</a>
                     <a href="#source-code">Source Code</a>
-                    <a href="https://github.com/nodesman/miro-codingtest-2020-retrospective" target="_blank">GitHub Repository &nearr;</a>
+                    <a href="https://github.com/nodesman/miro-codingtest-2020-retrospective" target="_blank">GitHub &nearr;</a>
                 </nav>
             </div>
         </div>
@@ -646,35 +669,34 @@
 
     <section class="hero">
         <div class="container">
-            <div class="eyebrow">Engineering Retrospective &middot; April 11–14, 2020 &middot; Amsterdam</div>
-            <h1>Miro Frontend Coding Assessment: Zero-Dependency <code>EmailsInput</code> SDK &amp; Browser DOM Internals</h1>
+            <div class="eyebrow">April 2020 &middot; Frontend Architecture Archive</div>
+            <h1>Miro Frontend Assessment: Zero&#8209;Dependency Email Input SDK</h1>
             <p class="hero-lead">
-                Built in 315 lines of zero-dependency ES5, this component implements a multi-email chip editor as a composite editing surface directly atop the browser&rsquo;s <code>contentEditable</code> engine—orchestrating non-editable pill islands, bare <code>Node.TEXT_NODE</code> leaves, W3C <code>Selection</code> and <code>Range</code> caret geometry, CSS anonymous text-box inheritance, and cross-engine event delegation from IE11 (<code>Trident</code>) to modern <code>Blink</code>, <code>Gecko</code>, and <code>WebKit</code>.
+                A reusable JavaScript UI library built from scratch in 315 lines of pure JavaScript and CSS, with zero frameworks or external dependencies. Engineered directly on native browser DOM, cursor-selection, and event APIs to run seamlessly across Chrome, Firefox, Safari, and Internet Explorer 11.
             </p>
 
             <div class="meta-strip">
                 <div class="meta-item">
-                    <span class="meta-label">Date</span>
+                    <span class="meta-label">Timeline</span>
                     <span class="meta-value">April 11–14, 2020 (23 Commits)</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">Runtime Dependencies</span>
-                    <span class="meta-value pass">Zero (Pure Vanilla ES5 + SCSS)</span>
+                    <span class="meta-label">Footprint</span>
+                    <span class="meta-value pass">315 Lines &middot; Zero Dependencies</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">Browser Engines</span>
-                    <span class="meta-value">IE11 (Trident), Blink, Gecko, WebKit</span>
+                    <span class="meta-label">Browsers</span>
+                    <span class="meta-value">Chrome, Firefox, Safari &amp; IE11</span>
                 </div>
                 <div class="meta-item">
-                    <span class="meta-label">Assessment Result</span>
-                    <span class="meta-value pass">&#10003; Passed Coding Round</span>
+                    <span class="meta-label">Outcome</span>
+                    <span class="meta-value pass">&#10003; Passed Miro Coding Round</span>
                 </div>
             </div>
 
             <div class="cta-row">
-                <a href="#live-demo" class="btn btn-primary">Try the Live Component &amp; Mocha Tests &darr;</a>
-                <a href="#code-review" class="btn btn-secondary">Read the Browser Internals Breakdown</a>
-                <a href="#source-code" class="btn btn-secondary">Inspect Source Code (315 LOC)</a>
+                <a href="#live-demo" class="btn btn-primary">Try the Live Demo &darr;</a>
+                <a href="#code-review" class="btn btn-secondary">Read Technical Notes &darr;</a>
             </div>
         </div>
     </section>
@@ -683,23 +705,20 @@
     <section id="overview">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part I &mdash; Architectural Thesis</span>
-                <h2 class="section-title">Building a Composite <code>contentEditable</code> Surface Directly on Browser DOM Primitives</h2>
+                <span class="section-tag">Part I &mdash; Overview</span>
+                <h2 class="section-title">A Standalone UI SDK Built Directly on Browser Primitives</h2>
             </div>
 
             <div class="thesis-layout">
                 <div class="personal-note">
                     <p>
-                        For this April 2020 Miro frontend assessment, I built <code>EmailsInput</code> as a standalone, zero-dependency JavaScript SDK (315 lines of pure ES5 and 70 lines of SCSS) that mounts onto any host element, runs multiple isolated instances on the same page, and supports IE11 (<code>Trident</code>) alongside modern Chrome, Firefox, and Safari.
+                        For Miro&rsquo;s April 2020 frontend coding assessment, the brief was to build a standalone email-chip input library—similar to the &ldquo;Share board&rdquo; invite field in Miro—that any web application could mount onto a page, instantiate multiple times independently, and control through a clean programmatic API.
                     </p>
                     <p>
-                        I modeled the entire <code>.emails-input</code> container as a <strong>single <code>contentEditable="true"</code> editing surface</strong> populated with non-editable pill islands (<code>contentEditable="false"</code>) and bare <code>Node.TEXT_NODE</code> leaves. Having one continuous flow container gives the user natural inline pill wrapping, unified focus borders, and seamless multi-address clipboard pasting.
+                        I built the complete library in <strong>315 lines of pure JavaScript and 70 lines of CSS</strong> with zero external dependencies. Modeling the input container as a single continuous rich-text surface—combining non-editable email chips alongside live typed text—meant managing cursor placement, keyboard boundaries, comma-separated clipboard pasting, and focus styling directly through native browser DOM and Selection APIs across both modern browsers and Internet Explorer 11.
                     </p>
                     <p>
-                        Making a mixed editable and non-editable DOM subtree behave deterministically meant managing the browser&rsquo;s editing, selection, and rendering internals directly in vanilla JavaScript: intercepting <code>Backspace</code> in the rich-text editing engine so pills are never removed behind internal state, seeding a persistent trailing <code>CharacterData</code> node so collapsed W3C <code>Range</code> carets always have a valid anchor, reading typed input strictly from direct <code>nodeType === 3</code> leaves, and styling classless anonymous CSS text boxes via parent color inheritance.
-                    </p>
-                    <p>
-                        I passed this coding assessment round at Miro on the strength of the zero-dependency SDK architecture, cross-browser DOM and Selection handling, and in-browser unit test suite, though the role ultimately did not pan out for other reasons.
+                        I passed this coding assessment round at Miro on the strength of the zero-dependency SDK design, cross-browser DOM handling, and live in-browser unit test suite, though the role ultimately did not pan out for other reasons.
                     </p>
 
                     <div class="signature">
@@ -708,22 +727,14 @@
                     </div>
                 </div>
 
-                <aside class="dom-anatomy-box">
-                    <span class="anatomy-kicker">DOM Subtree Topology</span>
-                    <h3>Hybrid Editable Tree Inside <code>.emails-input</code></h3>
-<pre class="dom-tree-pre">div.emails-input [contentEditable="true"]
-├── span.valid-email [contentEditable="false"]
-│   ├── #text "john@miro.com"
-│   └── span.delete-item ("x")
-├── span.invalid-email [contentEditable="false"]
-│   ├── #text "malformed-token"
-│   └── span.delete-item ("x")
-└── #text "" &larr; Caret &amp; Placeholder Anchor</pre>
-                    <ul class="invariant-list">
-                        <li><strong>State vs. DOM Parity:</strong> Intercepts <code>Backspace</code> at <code>anchorOffset === 0</code> and off-node focus so native <code>contentEditable</code> routines cannot delete pills behind <code>this._emails</code>.</li>
-                        <li><strong>Legal Caret Target:</strong> Seeds an explicit trailing <code>document.createTextNode('')</code> after tokenization so <code>Range.setStart(lastText, 0)</code> always resolves across Chrome, Firefox, Safari, and IE11.</li>
-                        <li><strong>O(1) Event Listeners:</strong> Uses bubbling <code>focusin</code>/<code>focusout</code> and a single root <code>click</code> delegator regardless of whether 5 or 5,000 CSV emails are mounted.</li>
-                        <li><strong>Parser-Boundary XSS Safety:</strong> Zero <code>innerHTML</code> calls across all 315 lines; arbitrary invalid paste tokens are constructed strictly via <code>createElement</code>, <code>innerText</code>, and <code>createTextNode</code>.</li>
+                <aside class="summary-card">
+                    <span class="anatomy-kicker">At a Glance</span>
+                    <h3>Key Engineering Highlights</h3>
+                    <ul class="invariant-list" style="border-top: none; padding-top: 2px; gap: 12px;">
+                        <li><strong>Clean Public SDK:</strong> Five-method API with strict private scope encapsulation and full multi-instance isolation on the same page.</li>
+                        <li><strong>Native Browser DOM Control:</strong> Direct orchestration of rich-text editing, W3C cursor-selection ranges, keyboard boundary guards, and CSS style inheritance.</li>
+                        <li><strong>Cross-Browser &amp; Paste-Safe:</strong> Batch comma-separated clipboard parsing across Chrome, Firefox, Safari, and IE11 using safe DOM node APIs throughout.</li>
+                        <li><strong>Live Browser Test Suite:</strong> Verified with automated Mocha, Chai, and spy assertions executing directly inside a real browser engine below.</li>
                     </ul>
                 </aside>
             </div>
@@ -734,25 +745,25 @@
     <section id="live-demo">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part II &mdash; Live Interactive Component &amp; Real-Browser Test Runner</span>
-                <h2 class="section-title">Interactive Multi-Instance Demo &amp; In-Browser Mocha Suite</h2>
+                <span class="section-tag">Part II &mdash; Live Demo &amp; Automated Tests</span>
+                <h2 class="section-title">Try the Multi-Instance Component &amp; In-Browser Mocha Suite</h2>
             </div>
 
             <div class="demo-instructions">
                 <div class="step-card">
-                    <span class="step-num">Probe 1 &middot; Caret-Preserving Tokenization</span>
-                    <h4>Type + Comma, Enter, or Blur</h4>
-                    <p>Click inside any input box below, type <code>alex@miro.com</code> or <code>invalid-token</code>, and press <code>,</code> or <code>Enter</code>. Each pill inserts <em>before</em> the active <code>TEXT_NODE</code> while keeping the caret pinned right.</p>
+                    <span class="step-num">Step 1 &middot; Type &amp; Tokenize</span>
+                    <h4>Enter Valid or Invalid Emails</h4>
+                    <p>Click inside any input box below, type an email like <strong>alex@miro.com</strong> (or a typo), and press comma, Enter, or click outside to create a chip.</p>
                 </div>
                 <div class="step-card">
-                    <span class="step-num">Probe 2 &middot; Backspace &amp; CSV Paste Guards</span>
-                    <h4>Test Boundary Backspace &amp; XSS Paste</h4>
-                    <p>Press <code>Backspace</code> right after a pill to see native <code>contentEditable</code> pill destruction blocked, or paste <code>a@b.com, &lt;img src=x onerror=alert(1)&gt;, c@d.com</code> to verify XSS-inert batch parsing.</p>
+                    <span class="step-num">Step 2 &middot; Batch Paste</span>
+                    <h4>Paste a Comma-Separated List</h4>
+                    <p>Paste multiple comma-separated addresses at once to see valid blue chips and red dashed invalid entries parsed cleanly in a single step.</p>
                 </div>
                 <div class="step-card">
-                    <span class="step-num">Probe 3 &middot; Multi-Instance SDK &amp; Mocha</span>
-                    <h4>Isolated Instances &amp; Chai Spies</h4>
-                    <p>Test <strong>Add email</strong> and <strong>Get emails count</strong> across all three isolated instances, then inspect the live in-browser <code>test/index.html</code> Mocha + Chai + Spies runner below.</p>
+                    <span class="step-num">Step 3 &middot; SDK &amp; Unit Tests</span>
+                    <h4>Test Isolated Instances &amp; Mocha</h4>
+                    <p>Click <strong>Add email</strong> and <strong>Get emails count</strong> across all three independent instances, then inspect the live Mocha unit test suite right below.</p>
                 </div>
             </div>
 
@@ -784,8 +795,29 @@
     <section id="code-review">
         <div class="container">
             <div class="section-header">
-                <span class="section-tag">Part III &mdash; Browser Internals &amp; SDK Engineering Breakdown</span>
-                <h2 class="section-title">Fifteen Low-Level DOM, CSS Render-Tree &amp; SDK Decisions in <code>src/emails-input.js</code></h2>
+                <span class="section-tag">Part III &mdash; Technical Deep Dive</span>
+                <h2 class="section-title">Under the Hood: Browser DOM Internals &amp; SDK Architecture</h2>
+            </div>
+
+            <div class="dom-topology-banner">
+                <div>
+                    <span class="anatomy-kicker">DOM Subtree Topology</span>
+                    <h3>Hybrid Editable Tree Inside <code>.emails-input</code></h3>
+<pre class="dom-tree-pre">div.emails-input [contentEditable="true"]
+├── span.valid-email [contentEditable="false"]
+│   ├── #text "john@miro.com"
+│   └── span.delete-item ("x")
+├── span.invalid-email [contentEditable="false"]
+│   ├── #text "malformed-token"
+│   └── span.delete-item ("x")
+└── #text "" &larr; Caret &amp; Placeholder Anchor</pre>
+                </div>
+                <ul class="invariant-list">
+                    <li><strong>State vs. DOM Parity:</strong> Intercepts <code>Backspace</code> at <code>anchorOffset === 0</code> and off-node focus so native <code>contentEditable</code> routines never remove pills behind <code>this._emails</code>.</li>
+                    <li><strong>Persistent Caret Anchor:</strong> Seeds an explicit trailing <code>document.createTextNode('')</code> after tokenization so <code>Range.setStart(lastText, 0)</code> always resolves cleanly across Chrome, Firefox, Safari, and IE11.</li>
+                    <li><strong>O(1) Event Delegation:</strong> Attaches bubbling <code>focusin</code>/<code>focusout</code> and a single root <code>click</code> delegator regardless of how many email pills are mounted.</li>
+                    <li><strong>Parser-Boundary XSS Safety:</strong> Zero <code>innerHTML</code> calls across all 315 lines; every node is constructed strictly via <code>createElement</code>, <code>innerText</code>, and <code>createTextNode</code>.</li>
+                </ul>
             </div>
 
             <div class="subsection-banner">
@@ -837,11 +869,10 @@ sel.addRange(range);</pre>
                         In a mixed container holding both pill elements and bare text, <code>container.textContent</code> and <code>container.innerText</code> recursively concatenate every descendant&rsquo;s text—including existing emails and their child <code>x</code> delete buttons. <code>getDirectTextContent()</code> walks direct <code>childNodes</code> and filters strictly on <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>) so tokenization reads only raw user keystrokes.
                     </p>
                     <pre class="code-snippet">function getDirectTextContent (el) {
-  var text = '';
-  for (var i = 0; i &lt; el.childNodes.length; i++) {
-    var node = el.childNodes[i];
-    if (node.nodeType === Node.TEXT_NODE) {
-      text += node.textContent;
+  var text = '', nodes = el.childNodes;
+  for (var i = 0; i &lt; nodes.length; i++) {
+    if (nodes[i].nodeType === Node.TEXT_NODE) {
+      text += nodes[i].textContent;
     }
   }
   return text;
