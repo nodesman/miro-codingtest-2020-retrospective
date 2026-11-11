@@ -6,7 +6,8 @@
     <title>Building the “Invite People” Box From Scratch — Miro Assessment (2020) | Raj Sekharan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         :root {
             --bg: #ffffff;
@@ -20,6 +21,7 @@
             --text-dim: #666666;
             --accent: #326891;
             --emerald: #1a6633;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
 
         * {
@@ -425,10 +427,11 @@
             border: 1px solid var(--border);
             border-left: 2px solid #121212;
             padding: 12px 14px;
-            font-family: Consolas, 'Courier New', monospace;
-            font-size: 11.8px;
-            line-height: 1.55;
-            color: #121212;
+            font-family: var(--font-mono);
+            font-variant-ligatures: none;
+            font-size: 11.2px;
+            line-height: 1.58;
+            color: #1f2328;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             max-width: 100%;
@@ -743,15 +746,21 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-left: 2px solid #121212;
-            padding: 10px 12px;
-            font-family: Consolas, 'Courier New', monospace;
-            font-size: 11.2px;
-            line-height: 1.5;
-            color: var(--text);
+            padding: 11px 13px;
+            font-family: var(--font-mono);
+            font-variant-ligatures: none;
+            font-size: 10.8px;
+            line-height: 1.56;
+            color: #1f2328;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             max-width: 100%;
             margin-top: auto;
+            tab-size: 2;
+        }
+
+        .code-snippet code {
+            font-size: 100%;
         }
 
         .tabs {
@@ -782,6 +791,10 @@
             flex-shrink: 0;
         }
 
+        .tab-btn:hover {
+            color: #121212;
+        }
+
         .tab-btn.active {
             background: #ffffff;
             color: #121212;
@@ -789,34 +802,125 @@
             font-weight: 700;
         }
 
-        .source-panel {
-            display: none;
+        .source-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            padding: 9px 16px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-top: none;
-            padding: 18px;
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .source-file-meta strong {
+            font-family: var(--font-mono);
+            font-size: 11.8px;
+            color: #121212;
+            font-weight: 600;
+        }
+
+        .source-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .source-action-btn {
+            background: #ffffff;
+            color: #121212;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 4px 10px;
+            font-family: 'Libre Franklin', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+        }
+
+        .source-action-btn:hover {
+            border-color: #121212;
+            background: #fafaf9;
+        }
+
+        .source-action-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 11.5px;
+            margin-left: 4px;
+            white-space: nowrap;
+        }
+
+        .source-action-link:hover {
+            text-decoration: underline;
+        }
+
+        .source-panel {
+            display: none;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-top: none;
+            padding: 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            max-height: 640px;
+            max-height: 680px;
             overflow-y: auto;
+        }
+
+        .source-viewer.expanded .source-panel {
+            max-height: none;
+            overflow-y: visible;
         }
 
         .source-panel.active {
             display: block;
         }
 
-        .source-panel pre {
-            font-family: Consolas, 'Courier New', monospace;
-            font-size: 12.5px;
-            line-height: 1.55;
-            color: var(--text);
+        .source-panel pre,
+        .source-panel pre[class*="language-"].line-numbers {
+            margin: 0;
+            padding: 18px 22px 18px 4.4em;
+            min-width: 100%;
+            width: max-content;
+            font-family: var(--font-mono);
+            font-variant-ligatures: none;
+            font-size: 13px;
+            line-height: 1.68;
+            color: #1f2328;
+            background: #ffffff;
+            white-space: pre;
+            tab-size: 2;
+        }
+
+        .source-panel .line-numbers .line-numbers-rows {
+            left: -4.4em;
+            width: 3.4em;
+            border-right: 1px solid #e6e8eb;
+            padding-right: 6px;
+            font-size: 100%;
+            line-height: inherit;
+        }
+
+        .source-panel .line-numbers-rows > span,
+        .source-panel .line-numbers-rows > span::before {
+            color: #8c959f;
+            font-size: 100%;
+            line-height: inherit;
         }
 
         code {
-            font-family: Consolas, 'Courier New', monospace;
+            font-family: var(--font-mono);
+            font-variant-ligatures: none;
             background: var(--surface);
             padding: 1px 4px;
-            font-size: 88%;
+            font-size: 86%;
             overflow-wrap: anywhere;
             word-break: break-word;
         }
@@ -825,8 +929,67 @@
         pre code {
             background: transparent;
             padding: 0;
+            font-size: 100%;
             overflow-wrap: normal;
             word-break: normal;
+        }
+
+        /* Editorial Light Syntax Highlighting (Prism.js) */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #656d76;
+            font-style: italic;
+        }
+
+        .token.punctuation {
+            color: #57606a;
+        }
+
+        .token.keyword,
+        .token.atrule,
+        .token.important {
+            color: #cf222e;
+            font-weight: 500;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #6639ba;
+        }
+
+        .token.string,
+        .token.char,
+        .token.attr-value,
+        .token.builtin {
+            color: #0a3069;
+        }
+
+        .token.regex {
+            color: #116329;
+        }
+
+        .token.number,
+        .token.boolean,
+        .token.constant,
+        .token.property,
+        .token.symbol,
+        .token.attr-name {
+            color: #0550ae;
+        }
+
+        .token.selector,
+        .token.inserted {
+            color: #116329;
+            font-weight: 500;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url {
+            color: #24292f;
+            background: transparent;
         }
 
         footer {
@@ -1042,13 +1205,26 @@
                 font-size: 11.5px;
             }
 
-            .source-panel {
-                padding: 14px 12px;
-                max-height: 500px;
+            .source-toolbar {
+                padding: 8px 12px;
+                font-size: 11.5px;
             }
 
-            .source-panel pre {
+            .source-panel {
+                padding: 0;
+                max-height: 520px;
+            }
+
+            .source-panel pre,
+            .source-panel pre[class*="language-"].line-numbers {
+                padding: 14px 14px 14px 3.8em;
                 font-size: 11.5px;
+                line-height: 1.62;
+            }
+
+            .source-panel .line-numbers .line-numbers-rows {
+                left: -3.8em;
+                width: 3em;
             }
         }
 
@@ -1265,7 +1441,7 @@
                     <p>
                         Inside a <code>contentEditable="true"</code> host, pressing <code>Backspace</code> when the caret sits at offset <code>0</code> of the trailing text node (<code>anchorOffset === 0</code>)&mdash;or when selection focus drifts onto a sibling node (<code>focusNode !== lastTextNode</code>)&mdash;causes the browser&rsquo;s rich-text editor to delete the preceding <code>contentEditable="false"</code> chip straight out of the DOM without updating <code>this._emails</code>. Blocking both cases in <code>onKeyDown</code> keeps the DOM and state in lockstep.
                     </p>
-                    <pre class="code-snippet">if (event.keyCode === BACKSPACE) {
+                    <pre class="code-snippet"><code class="language-javascript">if (event.keyCode === BACKSPACE) {
   var sel = getSelection();
   var lastText = getLastTextNode(event.target);
   if (sel.focusNode !== lastText) {
@@ -1275,7 +1451,7 @@
   if (sel.anchorOffset === 0) {
     event.preventDefault();
   }
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1284,7 +1460,7 @@
                     <p>
                         When a <code>contentEditable="true"</code> element holds only <code>contentEditable="false"</code> child <code>&lt;span&gt;</code> nodes and no trailing <code>Node.TEXT_NODE</code>, browsers have nowhere valid to place a collapsed cursor&mdash;causing vanished cursors in Firefox and IE11 or stray <code>&lt;div&gt;&lt;br&gt;&lt;/div&gt;</code> wrappers in Chrome. Appending <code>document.createTextNode('')</code> after creating a chip gives <code>range.setStart(lastText, 0)</code> a reliable landing spot.
                     </p>
-                    <pre class="code-snippet">deleteAllDirectTextNodes(containerElement);
+                    <pre class="code-snippet"><code class="language-javascript">deleteAllDirectTextNodes(containerElement);
 var textNode = document.createTextNode('');
 containerElement.appendChild(textNode);
 /* ... on container click: */
@@ -1292,7 +1468,7 @@ var range = document.createRange();
 range.setStart(lastText, 0);
 range.collapse(true);
 sel.removeAllRanges();
-sel.addRange(range);</pre>
+sel.addRange(range);</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1301,7 +1477,7 @@ sel.addRange(range);</pre>
                     <p>
                         Because the box mixes finished chip elements with live text, reading <code>container.textContent</code> or <code>container.innerText</code> sweeps up every existing email address and its <code>x</code> button too. <code>getDirectTextContent()</code> walks direct <code>childNodes</code> and reads only <code>nodeType === Node.TEXT_NODE</code> (<code>3</code>), isolating the letters the user just typed.
                     </p>
-                    <pre class="code-snippet">function getDirectTextContent (el) {
+                    <pre class="code-snippet"><code class="language-javascript">function getDirectTextContent (el) {
   var text = '', nodes = el.childNodes;
   for (var i = 0; i &lt; nodes.length; i++) {
     if (nodes[i].nodeType === Node.TEXT_NODE) {
@@ -1309,7 +1485,7 @@ sel.addRange(range);</pre>
     }
   }
   return text;
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1318,7 +1494,7 @@ sel.addRange(range);</pre>
                     <p>
                         Inside <code>addEmail</code>, <code>getLastTextNode()</code> scans <code>childNodes</code> backward from the end of the container to find the active trailing text node, then inserts the new chip right in front of it with <code>insertBefore(node, lastTextNode)</code>. Each chip snaps neatly to the left while the typing cursor stays parked at the end.
                     </p>
-                    <pre class="code-snippet">function getLastTextNode (el) {
+                    <pre class="code-snippet"><code class="language-javascript">function getLastTextNode (el) {
   for (var i = el.childNodes.length - 1; i &gt;= 0; i--) {
     if (el.childNodes[i].nodeType === Node.TEXT_NODE) {
       return el.childNodes[i];
@@ -1326,7 +1502,7 @@ sel.addRange(range);</pre>
   }
 }
 var lastText = getLastTextNode(_componentRoot);
-_componentRoot.insertBefore(node, lastText);</pre>
+_componentRoot.insertBefore(node, lastText);</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1335,11 +1511,11 @@ _componentRoot.insertBefore(node, lastText);</pre>
                     <p>
                         HTML <code>contentEditable</code> divs have no native <code>placeholder</code> attribute, and a bare DOM <code>Node.TEXT_NODE</code> (<code>this._placeholderElement</code>) cannot take a CSS class or inline style&mdash;it inherits <code>color</code> from its parent element. Setting <code>.emails-input { color: #C3C2CF }</code> paints the unfocused placeholder gray while chips override to <code>#050038</code>, and adding <code>.focus { color: #000 }</code> on <code>focusin</code> turns live typing black.
                     </p>
-                    <pre class="code-snippet">.emails-input {
+                    <pre class="code-snippet"><code class="language-scss">.emails-input {
   color: #C3C2CF;
   &amp;.focus { color: #000; }
   .email-input-valid-email { color: #050038; }
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1348,14 +1524,14 @@ _componentRoot.insertBefore(node, lastText);</pre>
                     <p>
                         <code>bindEvents</code> attaches five listeners once on the container root: bubbling <code>focusin</code> and <code>focusout</code> handlers, <code>paste</code> and <code>keydown</code> handlers, and one delegated <code>click</code> handler. Inside <code>onClick</code>, <code>event.target</code> routes clicks on <code>.delete-item</code> to chip removal while <code>event.currentTarget</code> places the cursor at the end of the field&mdash;keeping listener count <code>O(1)</code> whether the box holds two chips or two hundred.
                     </p>
-                    <pre class="code-snippet">function onClick (event) {
+                    <pre class="code-snippet"><code class="language-javascript">function onClick (event) {
   if (event.target.classList.contains('delete-item')) {
     deleteItem.call(this, event.target.parentNode);
     return;
   }
   var componentRoot = event.currentTarget;
   /* ... collapse Range onto lastTextNode ... */
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1364,12 +1540,12 @@ _componentRoot.insertBefore(node, lastText);</pre>
                     <p>
                         Supporting IE11 alongside modern browsers without polyfills meant handling both clipboard APIs directly: reading IE&rsquo;s global <code>window.clipboardData.getData('text')</code> when present and falling back to standard <code>event.clipboardData.getData('text')</code> for comma-separated pastes, paired with plain ES5 option handling in the constructor.
                     </p>
-                    <pre class="code-snippet">if (!!window.clipboardData) {
+                    <pre class="code-snippet"><code class="language-javascript">if (!!window.clipboardData) {
   pasteContent = window.clipboardData.getData('text');
 } else {
   pasteContent = event.clipboardData.getData('text');
 }
-var emails = pasteContent.split(',');</pre>
+var emails = pasteContent.split(',');</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1378,11 +1554,11 @@ var emails = pasteContent.split(',');</pre>
                     <p>
                         Invalid entries stay visible inline so people can spot and delete typos after pasting a long list. Across the entire file, <code>innerHTML</code> is never called once&mdash;every valid chip, typo entry, delete button, and placeholder node is built with <code>document.createElement</code>, <code>.innerText</code>, and <code>document.createTextNode</code>, so pasted HTML or script strings are rendered strictly as harmless text.
                     </p>
-                    <pre class="code-snippet">var invalidEmailItem = createElement('span', {
+                    <pre class="code-snippet"><code class="language-javascript">var invalidEmailItem = createElement('span', {
   'class': 'email-input-invalid-email',
   'contentEditable': 'false'
 });
-invalidEmailItem.innerText = content;</pre>
+invalidEmailItem.innerText = content;</code></pre>
                 </div>
             </div>
 
@@ -1398,14 +1574,14 @@ invalidEmailItem.innerText = content;</pre>
                     <p>
                         All internal DOM helpers and event handlers (<code>_addTextContentAsAnItem</code>, <code>_notifyListeners</code>, <code>bindEvents</code>, <code>deleteItem</code>) stay private inside the outer IIFE closure and receive instance context via <code>.call(this)</code> and <code>.bind(this)</code>, exposing only the five documented methods on <code>EmailsInput.prototype</code>.
                     </p>
-                    <pre class="code-snippet">function bindEvents (elements) {
+                    <pre class="code-snippet"><code class="language-javascript">function bindEvents (elements) {
   var el = elements.container;
   el.addEventListener('paste', onPaste.bind(this));
   el.addEventListener('keydown', onKeyDown.bind(this));
   el.addEventListener('focusout', onLoseFocus.bind(this));
   el.addEventListener('focusin', onGainFocus.bind(this));
   el.addEventListener('click', onClick.bind(this));
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1414,12 +1590,12 @@ invalidEmailItem.innerText = content;</pre>
                     <p>
                         Each item in <code>this._emails</code> stores both the string and a direct reference to its mounted DOM node. When someone clicks <code>x</code>, <code>deleteItem(node)</code> compares exact <code>HTMLElement</code> references (<code>current.node === node</code>), so even if the same address appears twice, clicking <code>x</code> removes the exact chip clicked without scraping text from the DOM.
                     </p>
-                    <pre class="code-snippet">for (var iter = 0; iter &lt; this._emails.length; iter++) {
+                    <pre class="code-snippet"><code class="language-javascript">for (var iter = 0; iter &lt; this._emails.length; iter++) {
   var current = this._emails[iter];
   if (current.node === node) {
     correspondingItem = current;
   }
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1428,11 +1604,11 @@ invalidEmailItem.innerText = content;</pre>
                     <p>
                         On setup, the constructor stores <code>hostElement['x-emails-input'] = this</code> on the JavaScript <code>HTMLElement</code> object itself&mdash;leaving the page&rsquo;s HTML attributes untouched while throwing a clear error if caller code tries to mount a second widget onto the same element. Likewise, <code>setEmails()</code> checks <code>emailsList instanceof Array</code> right at the door.
                     </p>
-                    <pre class="code-snippet">var prop = 'x-emails-input';
+                    <pre class="code-snippet"><code class="language-javascript">var prop = 'x-emails-input';
 if (typeof hostElement[prop] !== 'undefined') {
   throw Error('Already instantiated on this element.');
 }
-this._hostElement[prop] = this;</pre>
+this._hostElement[prop] = this;</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1441,11 +1617,11 @@ this._hostElement[prop] = this;</pre>
                     <p>
                         <code>getEmails()</code>, <code>getAllItems()</code>, and <code>_notifyListeners()</code> always return fresh arrays via <code>.map()</code> so outside callers cannot mutate internal state&mdash;verified in Chai via <code>expect(currentListOfEmails).to.not.equal(emails)</code>. And <code>addChangeListener</code> checks <code>indexOf(listener) === -1</code> so registering the same callback twice only fires it once.
                     </p>
-                    <pre class="code-snippet">EmailsInput.prototype.addChangeListener = function (fn) {
+                    <pre class="code-snippet"><code class="language-javascript">EmailsInput.prototype.addChangeListener = function (fn) {
   if (this._changeListeners.indexOf(fn) === -1) {
     this._changeListeners.push(fn);
   }
-};</pre>
+};</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1454,12 +1630,12 @@ this._hostElement[prop] = this;</pre>
                     <p>
                         Valid emails sit inside a filled blue pill needing only a <code>3px</code> gap, while typos sit on a transparent background with a <code>1px dashed #f00</code> underline. Giving siblings after an invalid entry a <code>7px</code> left margin keeps two red dashed underlines from running together into one long line, paired with separate <code>getEmails()</code> and <code>getAllItems()</code> readers.
                     </p>
-                    <pre class="code-snippet">.email-input-invalid-email + .email-input-invalid-email {
+                    <pre class="code-snippet"><code class="language-scss">.email-input-invalid-email + .email-input-invalid-email {
   margin-left: 7px;
 }
 .email-input-valid-email + .email-input-valid-email {
   margin-left: 3px;
-}</pre>
+}</code></pre>
                 </div>
 
                 <div class="review-card">
@@ -1468,10 +1644,10 @@ this._hostElement[prop] = this;</pre>
                     <p>
                         Because <code>contentEditable</code>, layout-driven <code>innerText</code>, and W3C <code>Selection</code>/<code>Range</code> behavior only exist inside a real browser engine, <code>test/index.html</code> runs Mocha, Chai, and Chai-Spies directly against live DOM nodes in the page&mdash;while <code>public/index.html</code> wires each demo box&rsquo;s buttons cleanly with ES5 <code>.bind()</code>.
                     </p>
-                    <pre class="code-snippet">add_email.addEventListener(
+                    <pre class="code-snippet"><code class="language-javascript">add_email.addEventListener(
   'click',
   self._addRandomEmail.bind(add_email, emailsInputInstance)
-);</pre>
+);</code></pre>
                 </div>
 
                 <div class="review-card review-callout">
@@ -1482,7 +1658,7 @@ this._hostElement[prop] = this;</pre>
                             Reading my April 2020 submission verbatim today&mdash;while keeping the original source files untouched&mdash;three small edge cases stand out that I would tighten now: (1) <code>setEmails()</code> removes existing chip nodes from the DOM and should also reset <code>this._emails = []</code> before adding the new list; (2) <code>deleteAllDirectTextNodes</code> loops forward over a live <code>childNodes</code> list rather than backward like <code>getLastTextNode</code>; and (3) clicking <code>.delete-item</code> removes the chip cleanly and should also call <code>_notifyListeners.call(this)</code>.
                         </p>
                     </div>
-                    <pre class="code-snippet">/* 1. Reset state in setEmails() */
+                    <pre class="code-snippet"><code class="language-javascript">/* 1. Reset state in setEmails() */
 this._emails = [];
 /* 2. Walk live childNodes backward */
 for (var i = el.childNodes.length - 1; i &gt;= 0; i--) {
@@ -1491,7 +1667,7 @@ for (var i = el.childNodes.length - 1; i &gt;= 0; i--) {
   }
 }
 /* 3. Fire listeners in deleteItem() */
-_notifyListeners.call(this);</pre>
+_notifyListeners.call(this);</code></pre>
                 </div>
             </div>
         </div>
@@ -1504,18 +1680,28 @@ _notifyListeners.call(this);</pre>
                 <span class="section-tag">Unmodified April 2020 Archive</span>
                 <h2 class="section-title">Read the Original 2020 Source &amp; Test Files</h2>
                 <p class="section-lead">
-                    All three files below are preserved verbatim from the April 11–14, 2020 commits.
+                    All three files below are preserved verbatim from the April 11–14, 2020 commits, with syntax highlighting and line numbers added for readability.
                 </p>
             </div>
 
-            <div class="tabs">
-                <button class="tab-btn active" onclick="showTab('js', this)">src/emails-input.js (315 lines)</button>
-                <button class="tab-btn" onclick="showTab('test', this)">test/emailsInputTest.spec.js (111 lines)</button>
-                <button class="tab-btn" onclick="showTab('scss', this)">src/emails-input.scss (70 lines)</button>
-            </div>
+            <div class="source-viewer" id="source-viewer-wrap">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('js', this)">src/emails-input.js (315 lines)</button>
+                    <button class="tab-btn" onclick="showTab('test', this)">test/emailsInputTest.spec.js (111 lines)</button>
+                    <button class="tab-btn" onclick="showTab('scss', this)">src/emails-input.scss (70 lines)</button>
+                </div>
 
-            <div id="tab-js" class="source-panel active">
-<pre><code>var EmailsInput = (function () {
+                <div class="source-toolbar">
+                    <span class="source-file-meta" id="active-file-meta"><strong>src/emails-input.js</strong> &middot; ES5 Vanilla JavaScript &middot; 315 lines</span>
+                    <div class="source-actions">
+                        <button type="button" class="source-action-btn" id="toggle-expand-btn" onclick="toggleSourceExpand()">Expand all lines</button>
+                        <button type="button" class="source-action-btn" id="copy-source-btn" onclick="copyActiveSource()">Copy code</button>
+                        <a id="active-github-link" class="source-action-link" href="https://github.com/nodesman/miro-codingtest-2020-retrospective/blob/master/src/emails-input.js" target="_blank">View on GitHub &nearr;</a>
+                    </div>
+                </div>
+
+                <div id="tab-js" class="source-panel active">
+<pre class="line-numbers"><code class="language-javascript">var EmailsInput = (function () {
 
     var emailValidationRegex = /^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -1833,7 +2019,7 @@ _notifyListeners.call(this);</pre>
             </div>
 
             <div id="tab-test" class="source-panel">
-<pre><code>var expect = chai.expect
+<pre class="line-numbers"><code class="language-javascript">var expect = chai.expect
 describe('EmailsInput', function () {
   describe('Instantiation', function () {
     it('should not allow more than one instance on the same element', function () {
@@ -1947,7 +2133,7 @@ describe('EmailsInput', function () {
             </div>
 
             <div id="tab-scss" class="source-panel">
-<pre><code>.emails-input {
+<pre class="line-numbers"><code class="language-scss">.emails-input {
   margin: 10px 0;
   padding: 10px;
   box-shadow: 0 0 2px #aaa;
@@ -2011,10 +2197,13 @@ describe('EmailsInput', function () {
     margin-left: 3px;
   }
 
+
+
   .email-input-invalid-email:last-child, .email-input-valid-email:last-child {
     margin-right: 5px;
   }
 }</code></pre>
+            </div>
             </div>
         </div>
     </section>
@@ -2025,7 +2214,28 @@ describe('EmailsInput', function () {
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-scss.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        var sourceMetaMap = {
+            js: {
+                path: 'src/emails-input.js',
+                detail: 'ES5 Vanilla JavaScript \u00b7 315 lines',
+                url: 'https://github.com/nodesman/miro-codingtest-2020-retrospective/blob/master/src/emails-input.js'
+            },
+            test: {
+                path: 'test/emailsInputTest.spec.js',
+                detail: 'Mocha + Chai + Spies \u00b7 111 lines',
+                url: 'https://github.com/nodesman/miro-codingtest-2020-retrospective/blob/master/test/emailsInputTest.spec.js'
+            },
+            scss: {
+                path: 'src/emails-input.scss',
+                detail: 'Component Stylesheet (SCSS) \u00b7 70 lines',
+                url: 'https://github.com/nodesman/miro-codingtest-2020-retrospective/blob/master/src/emails-input.scss'
+            }
+        };
+
         function showTab(id, btn) {
             var panels = document.querySelectorAll('.source-panel');
             for (var i = 0; i < panels.length; i++) {
@@ -2035,8 +2245,47 @@ describe('EmailsInput', function () {
             for (var j = 0; j < buttons.length; j++) {
                 buttons[j].classList.remove('active');
             }
-            document.getElementById('tab-' + id).classList.add('active');
+            var activePanel = document.getElementById('tab-' + id);
+            activePanel.classList.add('active');
             btn.classList.add('active');
+            if (btn.scrollIntoView) {
+                btn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
+
+            var meta = sourceMetaMap[id];
+            if (meta) {
+                var metaEl = document.getElementById('active-file-meta');
+                metaEl.innerHTML = '<strong>' + meta.path + '</strong> &middot; ' + meta.detail;
+                document.getElementById('active-github-link').href = meta.url;
+            }
+
+            if (window.Prism && Prism.plugins && Prism.plugins.lineNumbers) {
+                var pre = activePanel.querySelector('pre');
+                if (pre) {
+                    Prism.plugins.lineNumbers.resize(pre);
+                }
+            }
+        }
+
+        function toggleSourceExpand() {
+            var wrap = document.getElementById('source-viewer-wrap');
+            var btn = document.getElementById('toggle-expand-btn');
+            var expanded = wrap.classList.toggle('expanded');
+            btn.textContent = expanded ? 'Collapse height' : 'Expand all lines';
+        }
+
+        function copyActiveSource() {
+            var codeEl = document.querySelector('.source-panel.active code');
+            var btn = document.getElementById('copy-source-btn');
+            if (!codeEl || !navigator.clipboard) {
+                return;
+            }
+            navigator.clipboard.writeText(codeEl.textContent).then(function () {
+                btn.textContent = 'Copied \u2713';
+                setTimeout(function () {
+                    btn.textContent = 'Copy code';
+                }, 1800);
+            });
         }
     </script>
 </body>
