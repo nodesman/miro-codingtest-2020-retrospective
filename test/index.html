@@ -1,13 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Mocha</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <script>
+      (function () {
+        var STORAGE_KEY = 'miro-retro-theme';
+        var resolved = null;
+        try {
+          var search = window.location.search || '';
+          var match = search.match(/[?&]theme=(dark|light)\b/);
+          if (match) {
+            resolved = match[1];
+          }
+        } catch (e) {}
+        if (!resolved) {
+          try {
+            if (window.parent && window.parent !== window && window.parent.document) {
+              var parentTheme = window.parent.document.documentElement.getAttribute('data-theme');
+              if (parentTheme === 'dark' || parentTheme === 'light') {
+                resolved = parentTheme;
+              }
+            }
+          } catch (e) {}
+        }
+        if (!resolved) {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (raw === 'dark' || raw === 'light') {
+              resolved = raw;
+            }
+          } catch (e) {}
+        }
+        if (!resolved) {
+          var prefersDark = false;
+          try {
+            prefersDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          } catch (e) {}
+          var hour = new Date().getHours();
+          var isNightHour = (hour >= 18 || hour < 7);
+          resolved = (prefersDark || isNightHour) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', resolved);
+        var meta = document.querySelector('meta[name="color-scheme"]');
+        if (meta) {
+          meta.setAttribute('content', resolved);
+        }
+      })();
+    </script>
+    <title>Mocha — EmailsInput Browser Test Suite</title>
     <link rel="stylesheet" href="mocha.css" />
     <style>
+      :root {
+        --mocha-bg: #ffffff;
+        --mocha-fg: #121212;
+        --mocha-stats-fg: #595959;
+        --mocha-stats-em: #000000;
+        --mocha-pass-icon: #0f766e;
+        --mocha-fail-fg: #cf222e;
+        --mocha-pre-bg: #f7f7f5;
+        --mocha-pre-border: #dcdcdc;
+        --mocha-replay-bg: #eeeeee;
+        --mocha-replay-fg: #595959;
+        --scrollbar-thumb: #6b6b68;
+        --scrollbar-track: #f2f2ef;
+        color-scheme: light dark;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      }
+
+      :root:has(> head > meta[name="color-scheme"][content="dark"]),
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --mocha-bg: #121316;
+        --mocha-fg: #eceae4;
+        --mocha-stats-fg: #9ca3af;
+        --mocha-stats-em: #f7f6f2;
+        --mocha-pass-icon: #3fb950;
+        --mocha-fail-fg: #ff7b72;
+        --mocha-pre-bg: #161920;
+        --mocha-pre-border: #2e333d;
+        --mocha-replay-bg: #232730;
+        --mocha-replay-fg: #b0b7c3;
+        --scrollbar-thumb: #7d8594;
+        --scrollbar-track: #181a1f;
+      }
+
+      :root:has(> head > meta[name="color-scheme"][content="light"]),
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) {
+          --mocha-bg: #121316;
+          --mocha-fg: #eceae4;
+          --mocha-stats-fg: #9ca3af;
+          --mocha-stats-em: #f7f6f2;
+          --mocha-pass-icon: #3fb950;
+          --mocha-fail-fg: #ff7b72;
+          --mocha-pre-bg: #161920;
+          --mocha-pre-border: #2e333d;
+          --mocha-replay-bg: #232730;
+          --mocha-replay-fg: #b0b7c3;
+          --scrollbar-thumb: #7d8594;
+          --scrollbar-track: #181a1f;
+        }
+      }
+
       body {
-        background: #ffffff;
+        background: var(--mocha-bg);
+        color: var(--mocha-fg);
         margin: 0;
       }
       #mocha {
@@ -17,9 +120,95 @@
       #mocha > ul > .suite > h1 {
         margin-top: 0;
       }
+      #mocha h1,
+      #mocha h2,
+      #mocha h1 a {
+        color: var(--mocha-fg);
+      }
+      #mocha .test.pass::before {
+        color: var(--mocha-pass-icon);
+      }
+      #mocha .test.fail,
+      #mocha .test.fail::before,
+      #mocha .test pre.error,
+      #mocha-error {
+        color: var(--mocha-fail-fg);
+      }
+      #mocha .test pre,
+      #mocha .test .html-error {
+        background: var(--mocha-pre-bg);
+        color: var(--mocha-fg);
+        border-color: var(--mocha-pre-border);
+        border-bottom-color: var(--mocha-pre-border);
+        box-shadow: none;
+      }
+      #mocha .test.fail pre {
+        color: var(--mocha-fg);
+      }
+      #mocha .test a.replay {
+        background: var(--mocha-replay-bg);
+        color: var(--mocha-replay-fg);
+        opacity: 0.65;
+      }
+      #mocha .test:hover a.replay {
+        opacity: 1;
+      }
       #mocha-stats {
         top: 14px;
         right: 20px;
+        color: var(--mocha-stats-fg);
+        background: var(--mocha-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      #mocha-stats em {
+        color: var(--mocha-stats-em);
+      }
+      #mocha-stats a:hover {
+        border-bottom-color: var(--mocha-pre-border);
+      }
+      #mocha code .comment {
+        color: #6e7781;
+      }
+      :root[data-theme="dark"] #mocha-stats canvas,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha-stats canvas {
+        filter: invert(0.9) hue-rotate(180deg);
+      }
+      :root[data-theme="dark"] #mocha code .comment,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha code .comment {
+        color: #8b949e;
+      }
+      :root[data-theme="dark"] #mocha code .init,
+      :root[data-theme="dark"] #mocha code .number,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha code .init,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha code .number {
+        color: #79c0ff;
+      }
+      :root[data-theme="dark"] #mocha code .string,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha code .string {
+        color: #a5d6ff;
+      }
+      :root[data-theme="dark"] #mocha code .keyword,
+      :root:has(> head > meta[name="color-scheme"][content="dark"]) #mocha code .keyword {
+        color: #ffab70;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha-stats canvas {
+          filter: invert(0.9) hue-rotate(180deg);
+        }
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha code .comment {
+          color: #8b949e;
+        }
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha code .init,
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha code .number {
+          color: #79c0ff;
+        }
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha code .string {
+          color: #a5d6ff;
+        }
+        :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) #mocha code .keyword {
+          color: #ffab70;
+        }
       }
       @media (max-width: 640px) {
         #mocha {
@@ -29,7 +218,8 @@
         #mocha-stats {
           position: static;
           margin-bottom: 12px;
-          font-size: 11px;
+          font-size: 0.6875rem;
+          padding: 0;
         }
         #mocha ul, #mocha li {
           margin-left: 0;
@@ -51,6 +241,66 @@
     <script src="emailsInputTest.spec.js"></script>
     <script>
       mocha.run();
+
+      (function () {
+        function applyMochaTheme(theme) {
+          if (theme !== 'dark' && theme !== 'light') {
+            return;
+          }
+          document.documentElement.setAttribute('data-theme', theme);
+          var meta = document.querySelector('meta[name="color-scheme"]');
+          if (meta) {
+            meta.setAttribute('content', theme);
+          }
+        }
+
+        function resolveStandaloneTheme() {
+          try {
+            var search = window.location.search || '';
+            var match = search.match(/[?&]theme=(dark|light)\b/);
+            if (match) {
+              return match[1];
+            }
+          } catch (e) {}
+          try {
+            var stored = localStorage.getItem('miro-retro-theme');
+            if (stored === 'dark' || stored === 'light') {
+              return stored;
+            }
+          } catch (e) {}
+          var prefersDark = false;
+          try {
+            prefersDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          } catch (e) {}
+          var hour = new Date().getHours();
+          return (prefersDark || hour >= 18 || hour < 7) ? 'dark' : 'light';
+        }
+
+        window.addEventListener('message', function (ev) {
+          if (ev.origin && ev.origin !== 'null' && ev.origin !== window.location.origin) {
+            return;
+          }
+          if (ev.data && ev.data.type === 'miro-retro-theme') {
+            applyMochaTheme(ev.data.theme);
+          }
+        });
+
+        window.addEventListener('storage', function (ev) {
+          if (!ev || !ev.key || ev.key === 'miro-retro-theme') {
+            applyMochaTheme(resolveStandaloneTheme());
+          }
+        });
+
+        if (window.parent === window && window.matchMedia) {
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+          var onMq = function () { applyMochaTheme(resolveStandaloneTheme()); };
+          if (mq.addEventListener) {
+            mq.addEventListener('change', onMq);
+          } else if (mq.addListener) {
+            mq.addListener(onMq);
+          }
+        }
+      })();
     </script>
   </body>
 </html>

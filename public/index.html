@@ -3,10 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <script>
+        (function () {
+            var STORAGE_KEY = 'miro-retro-theme';
+            var resolved = null;
+            try {
+                var search = window.location.search || '';
+                var match = search.match(/[?&]theme=(dark|light)\b/);
+                if (match) {
+                    resolved = match[1];
+                }
+            } catch (e) {}
+            if (!resolved) {
+                try {
+                    if (window.parent && window.parent !== window && window.parent.document) {
+                        var parentTheme = window.parent.document.documentElement.getAttribute('data-theme');
+                        if (parentTheme === 'dark' || parentTheme === 'light') {
+                            resolved = parentTheme;
+                        }
+                    }
+                } catch (e) {}
+            }
+            if (!resolved) {
+                try {
+                    var raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw === 'dark' || raw === 'light') {
+                        resolved = raw;
+                    }
+                } catch (e) {}
+            }
+            if (!resolved) {
+                var prefersDark = false;
+                try {
+                    prefersDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                } catch (e) {}
+                var hour = new Date().getHours();
+                var isNightHour = (hour >= 18 || hour < 7);
+                resolved = (prefersDark || isNightHour) ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', resolved);
+            var meta = document.querySelector('meta[name="color-scheme"]');
+            if (meta) {
+                meta.setAttribute('content', resolved);
+            }
+        })();
+    </script>
     <title>Demo for emails-input Component</title>
     <link href="emails-input.css" type="text/css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --demo-bg: #fafaf9;
+            --demo-fg: #1f2328;
+            --demo-muted: #57606a;
+            --card-bg: #ffffff;
+            --card-border: #e3e3df;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --btn-bg: #4262ff;
+            --btn-hover: #314ed9;
+            --focus-ring: #2b5f87;
+            --scrollbar-thumb: #767672;
+            --scrollbar-track: #f0f0ed;
+            color-scheme: light dark;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+
+        :root:has(> head > meta[name="color-scheme"][content="dark"]),
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --demo-bg: #14161a;
+            --demo-fg: #eceae4;
+            --demo-muted: #a6aeb9;
+            --card-bg: #1b1e24;
+            --card-border: #2e333d;
+            --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+            --btn-bg: #4f70ff;
+            --btn-hover: #6482ff;
+            --focus-ring: #79b8ff;
+            --scrollbar-thumb: #7d8594;
+            --scrollbar-track: #181a1f;
+        }
+
+        :root:has(> head > meta[name="color-scheme"][content="light"]),
+        :root[data-theme="light"] {
+            color-scheme: light;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) {
+                --demo-bg: #14161a;
+                --demo-fg: #eceae4;
+                --demo-muted: #a6aeb9;
+                --card-bg: #1b1e24;
+                --card-border: #2e333d;
+                --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+                --btn-bg: #4f70ff;
+                --btn-hover: #6482ff;
+                --focus-ring: #79b8ff;
+                --scrollbar-thumb: #7d8594;
+                --scrollbar-track: #181a1f;
+            }
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -15,8 +114,8 @@
             margin: 0;
             padding: 18px 20px 20px;
             font-family: "Open Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #fafaf9;
-            color: #1f2328;
+            background-color: var(--demo-bg);
+            color: var(--demo-fg);
         }
 
         .demo-shell {
@@ -31,30 +130,31 @@
         }
 
         .instance-label {
-            font-size: 11px;
+            font-size: 0.6875rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #57606a;
+            color: var(--demo-muted);
             line-height: 1.3;
             margin-bottom: 4px;
         }
 
         .instances-note {
-            font-size: 12.5px;
+            font-size: 0.78125rem;
             line-height: 1.45;
-            color: #57606a;
+            color: var(--demo-muted);
             margin: 12px 0 10px;
         }
 
         input[type=button] {
-            background-color: #4262ff;
+            background-color: var(--btn-bg);
             border: 0;
             border-radius: 6px;
             color: #ffffff;
             padding: 8px 14px;
+            min-height: 34px;
             font-family: "Open Sans", sans-serif;
-            font-size: 13px;
+            font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
             margin: 2px 8px 0 0;
@@ -62,14 +162,19 @@
         }
 
         input[type=button]:hover {
-            background-color: #314ed9;
+            background-color: var(--btn-hover);
+        }
+
+        input[type=button]:focus-visible {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
         }
 
         .main-form {
             margin: 0;
-            background: #ffffff;
-            border: 1px solid #e3e3df;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
             padding: 16px 20px;
             width: 100%;
             border-radius: 8px;
@@ -79,6 +184,67 @@
         .emails-input {
             min-width: 0 !important;
             width: 100%;
+        }
+
+        :root[data-theme="dark"] .emails-input,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input {
+            background-color: #111318;
+            box-shadow: inset 0 0 0 1px #363c49;
+            color: #8b949e;
+        }
+
+        :root[data-theme="dark"] .emails-input.focus,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input.focus {
+            color: #f0f3f6;
+            box-shadow: inset 0 0 0 1.5px #79b8ff;
+        }
+
+        :root[data-theme="dark"] .emails-input .email-input-valid-email,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input .email-input-valid-email {
+            background-color: rgba(96, 149, 255, 0.22);
+            color: #e2ecff;
+        }
+
+        :root[data-theme="dark"] .emails-input .email-input-invalid-email,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input .email-input-invalid-email {
+            color: #ffdcd7;
+            border-bottom-color: #ff6b6b;
+        }
+
+        :root[data-theme="dark"] .emails-input .delete-item,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input .delete-item {
+            color: #9fb4d8;
+        }
+
+        :root[data-theme="dark"] .emails-input .delete-item:hover,
+        :root:has(> head > meta[name="color-scheme"][content="dark"]) .emails-input .delete-item:hover {
+            color: #ffffff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input {
+                background-color: #111318;
+                box-shadow: inset 0 0 0 1px #363c49;
+                color: #8b949e;
+            }
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input.focus {
+                color: #f0f3f6;
+                box-shadow: inset 0 0 0 1.5px #79b8ff;
+            }
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input .email-input-valid-email {
+                background-color: rgba(96, 149, 255, 0.22);
+                color: #e2ecff;
+            }
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input .email-input-invalid-email {
+                color: #ffdcd7;
+                border-bottom-color: #ff6b6b;
+            }
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input .delete-item {
+                color: #9fb4d8;
+            }
+            :root:not([data-theme="light"]):not(:has(> head > meta[name="color-scheme"][content="light"])) .emails-input .delete-item:hover {
+                color: #ffffff;
+            }
         }
 
         @media only screen and (max-width: 680px) {
@@ -97,7 +263,7 @@
 
             input[type=button] {
                 padding: 8px 13px;
-                font-size: 12.5px;
+                font-size: 0.78125rem;
             }
         }
     </style>
@@ -173,6 +339,64 @@
       }
     }
     demoApp.init()
+
+    function applyEmbedTheme(theme) {
+      if (theme !== 'dark' && theme !== 'light') {
+        return;
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      var meta = document.querySelector('meta[name="color-scheme"]');
+      if (meta) {
+        meta.setAttribute('content', theme);
+      }
+    }
+
+    function resolveStandaloneTheme() {
+      try {
+        var search = window.location.search || '';
+        var match = search.match(/[?&]theme=(dark|light)\b/);
+        if (match) {
+          return match[1];
+        }
+      } catch (e) {}
+      try {
+        var stored = localStorage.getItem('miro-retro-theme');
+        if (stored === 'dark' || stored === 'light') {
+          return stored;
+        }
+      } catch (e) {}
+      var prefersDark = false;
+      try {
+        prefersDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      } catch (e) {}
+      var hour = new Date().getHours();
+      return (prefersDark || hour >= 18 || hour < 7) ? 'dark' : 'light';
+    }
+
+    window.addEventListener('message', function (ev) {
+      if (ev.origin && ev.origin !== 'null' && ev.origin !== window.location.origin) {
+        return;
+      }
+      if (ev.data && ev.data.type === 'miro-retro-theme') {
+        applyEmbedTheme(ev.data.theme);
+      }
+    });
+
+    window.addEventListener('storage', function (ev) {
+      if (!ev || !ev.key || ev.key === 'miro-retro-theme') {
+        applyEmbedTheme(resolveStandaloneTheme());
+      }
+    });
+
+    if (window.parent === window && window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onMq = function () { applyEmbedTheme(resolveStandaloneTheme()); };
+      if (mq.addEventListener) {
+        mq.addEventListener('change', onMq);
+      } else if (mq.addListener) {
+        mq.addListener(onMq);
+      }
+    }
   })()
 
 </script>
