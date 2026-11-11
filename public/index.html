@@ -2,39 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo for emails-input Component</title>
     <link href="emails-input.css" type="text/css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        input[type=button] {
-            background-color: #4566f6;
-            border: 0;
-            border-radius: 5px;
-            color: #ffffff;
-            padding: 10px 20px;
-
-            font-size: 14px;
-        }
-
-        .main-form {
-            margin: 0 auto;
-            box-shadow: 4px 4px 10px #aaa;
-            padding: 30px;
+        * {
             box-sizing: border-box;
-            width: 800px;
-            border-radius: 10px;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: "Open Sans";
+            padding: 20px 16px 28px;
+            font-family: "Open Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #fafaf9;
+            color: #1f2328;
         }
 
-        @media only screen and (max-width: 800px) {
+        input[type=button] {
+            background-color: #4262ff;
+            border: 0;
+            border-radius: 6px;
+            color: #ffffff;
+            padding: 9px 16px;
+            font-family: "Open Sans", sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 6px 8px 0 0;
+            transition: background-color 0.15s ease;
+        }
+
+        input[type=button]:hover {
+            background-color: #314ed9;
+        }
+
+        .main-form {
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e3e3df;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 22px 24px;
+            width: 100%;
+            max-width: 720px;
+            border-radius: 8px;
+        }
+
+        .emails-input {
+            min-width: 0 !important;
+            width: 100%;
+        }
+
+        p[align="center"] {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #57606a;
+            max-width: 600px;
+            margin: 18px auto 14px;
+            padding: 0 8px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 14px 10px 20px;
+            }
+
             .main-form {
-                width: 90%;
-                margin: 0 auto;
+                padding: 16px;
+            }
+
+            input[type=button] {
+                padding: 9px 14px;
+                font-size: 13px;
             }
         }
     </style>

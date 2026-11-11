@@ -5,6 +5,31 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="mocha.css" />
+    <style>
+      body {
+        background: #ffffff;
+      }
+      #mocha {
+        margin: 28px 32px;
+      }
+      @media (max-width: 640px) {
+        #mocha {
+          margin: 16px 14px 24px;
+        }
+        #mocha-stats {
+          position: static;
+          margin-bottom: 12px;
+          font-size: 11px;
+        }
+        #mocha ul, #mocha li {
+          margin-left: 0;
+          padding-left: 8px;
+        }
+        #mocha .suite {
+          margin-left: 8px;
+        }
+      }
+    </style>
     <script src="../src/emails-input.js"></script>
   </head>
   <body>
